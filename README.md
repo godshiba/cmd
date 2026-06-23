@@ -53,6 +53,13 @@ source "$HOME/scripts/findcmd/shell/findcmd.widget.zsh"
 source ~/.zshrc
 ```
 
+**Ctrl+` не срабатывает?** Некоторые терминалы перехватывают эту клавишу (новое окно).
+Отключи шорткат в настройках Terminal/iTerm или раскомментируй в `shell/findcmd.widget.zsh`:
+
+```zsh
+bindkey '^ ' findcmd-widget   # Ctrl+Space
+```
+
 ## Использование
 
 | Команда | Описание |
