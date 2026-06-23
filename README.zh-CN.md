@@ -25,7 +25,6 @@
 - [简介](#简介)
 - [系统要求](#系统要求)
 - [安装](#安装)
-- [文档语言](#文档语言)
 - [应用语言](#应用语言)
 - [快捷键](#快捷键)
 - [命令](#命令)
@@ -66,16 +65,6 @@ unalias cmd 2>/dev/null
 export PATH="$HOME/scripts/cmd:$PATH"
 source "$HOME/scripts/cmd/shell/cmd.widget.zsh"
 ```
-
-## 文档语言
-
-| 语言 | 文件 |
-|------|------|
-| English | [README.md](README.md) |
-| Русский | [README.ru.md](README.ru.md) |
-| **中文** | [README.zh-CN.md](README.zh-CN.md) |
-
-链接：https://github.com/godshiba/cmd/blob/main/README.zh-CN.md
 
 ## 应用语言
 

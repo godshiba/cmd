@@ -25,7 +25,6 @@
 - [Что это](#что-это)
 - [Требования](#требования)
 - [Установка](#установка)
-- [Языки документации](#языки-документации)
 - [Язык приложения](#язык-приложения)
 - [Горячие клавиши](#горячие-клавиши)
 - [Команды](#команды)
@@ -66,17 +65,6 @@ unalias cmd 2>/dev/null
 export PATH="$HOME/scripts/cmd:$PATH"
 source "$HOME/scripts/cmd/shell/cmd.widget.zsh"
 ```
-
-## Языки документации
-
-| Язык | Файл |
-|------|------|
-| English | [README.md](README.md) |
-| **Русский** | [README.ru.md](README.ru.md) |
-| 中文 | [README.zh-CN.md](README.zh-CN.md) |
-
-Ссылки:
-- https://github.com/godshiba/cmd/blob/main/README.ru.md
 
 ## Язык приложения
 

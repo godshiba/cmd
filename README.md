@@ -25,7 +25,6 @@
 - [What is cmd?](#what-is-cmd)
 - [Requirements](#requirements)
 - [Quick start](#quick-start)
-- [Documentation languages](#documentation-languages)
 - [App languages](#app-languages)
 - [Hotkeys](#hotkeys)
 - [Commands](#commands)
@@ -89,19 +88,6 @@ source ~/.zshrc
 cmd ls
 cmd lang en    # optional: set UI language
 ```
-
-## Documentation languages
-
-| Language | README |
-|----------|--------|
-| **English** | [README.md](README.md) |
-| **Русский** | [README.ru.md](README.ru.md) |
-| **中文 (简体)** | [README.zh-CN.md](README.zh-CN.md) |
-
-Direct links:
-- https://github.com/godshiba/cmd/blob/main/README.md
-- https://github.com/godshiba/cmd/blob/main/README.ru.md
-- https://github.com/godshiba/cmd/blob/main/README.zh-CN.md
 
 ## App languages
 
