@@ -3,7 +3,8 @@ import os
 PACKAGE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA_DIR = os.path.join(PACKAGE_DIR, "data")
 USEFUL_PATH = os.path.join(DATA_DIR, "useful_system.json")
-USER_DIR = os.path.join(os.path.expanduser("~"), ".findcmd")
+USER_DIR = os.path.join(os.path.expanduser("~"), ".cmd")
+_LEGACY_DIR = os.path.join(os.path.expanduser("~"), ".findcmd")
 
 ESSENTIAL_PATH = os.path.join(DATA_DIR, "essential.json")
 CATEGORIES_PATH = os.path.join(DATA_DIR, "categories.json")
@@ -13,4 +14,6 @@ HISTORY_PATH = os.path.join(USER_DIR, "history.json")
 
 
 def ensure_user_dir():
+    if not os.path.exists(USER_DIR) and os.path.isdir(_LEGACY_DIR):
+        os.rename(_LEGACY_DIR, USER_DIR)
     os.makedirs(USER_DIR, exist_ok=True)

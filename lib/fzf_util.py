@@ -13,7 +13,7 @@ def run_fzf(cmd, lines):
 
     # fzf-tmux только внутри активной tmux-сессии
     if (
-        os.environ.get("FINDCMD_FROM_ZLE")
+        os.environ.get("CMD_FROM_ZLE")
         and os.environ.get("TMUX")
         and shutil.which("fzf-tmux")
     ):

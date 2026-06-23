@@ -44,7 +44,7 @@ def format_card(card, compact=False):
             if ex.get("desc"):
                 lines.append(f"      → {ex['desc']}")
         if not compact:
-            lines.append("\n  findcmd --pick-example " + card["name"] + "  — выбрать пример")
+            lines.append("\n  cmd --pick-example " + card["name"] + "  — выбрать пример")
 
     if card.get("danger"):
         note = card.get("danger_note", "Будь осторожен с этой командой!")
@@ -53,10 +53,10 @@ def format_card(card, compact=False):
     related = card.get("related", [])
     if related and not compact:
         lines.append(f"\nСвязанные: {', '.join(related)}")
-        lines.append(f"  findcmd related {card['name']}  — открыть связанные")
+        lines.append(f"  cmd related {card['name']}  — открыть связанные")
 
     if tier in ("system", "useful") and not compact:
-        lines.append(f"\n💡 Добавь свою карточку: findcmd edit {card['name']}")
+        lines.append(f"\n💡 Добавь свою карточку: cmd edit {card['name']}")
 
     lines.append("")
     return "\n".join(lines)
@@ -64,13 +64,13 @@ def format_card(card, compact=False):
 
 def format_search_results(results, query):
     if not results:
-        return f"Ничего не найдено по запросу «{query}».\nПопробуй: findcmd --all {query}"
+        return f"Ничего не найдено по запросу «{query}».\nПопробуй: cmd --all {query}"
     lines = [f"Найдено: {len(results)} по запросу «{query}»\n"]
     for i, r in enumerate(results):
         tier = TIER_ICONS.get(r.get("tier", ""), " ")
         title = r.get("title") or r.get("what") or ""
         lines.append(f"  [{i}] {tier} {r['name']} — {title}")
-    lines.append("\nfindcmd <имя>  или  findcmd --pick")
+    lines.append("\ncmd <имя>  или  cmd --pick")
     return "\n".join(lines)
 
 

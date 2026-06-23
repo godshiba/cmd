@@ -14,22 +14,22 @@ from lib.lookup import related_cards, resolve, search
 from lib.paths import CUSTOM_PATH, INDEX_PATH, ensure_user_dir
 
 
-HELP = """findcmd — личный навигатор по командам терминала
+HELP = """cmd — навигатор по командам терминала
 
 Использование:
-  findcmd                    браузер с группировкой (fzf)
-  findcmd ls                 карточка команды
-  findcmd копир              поиск по ключевому слову
-  findcmd related ls         связанные команды
-  findcmd --pick             выбрать команду (для shell-виджета)
-  findcmd --pick-example ls  выбрать пример (Enter/Ctrl-Y)
-  findcmd --copy ls          скопировать первый пример
-  findcmd --all              показать все системные команды
-  findcmd index              обновить индекс macOS
-  findcmd edit docker        своя карточка
+  cmd                    браузер с группировкой (fzf)
+  cmd ls                 карточка команды
+  cmd копир              поиск по ключевому слову
+  cmd related ls         связанные команды
+  cmd --pick             выбрать команду (для shell-виджета)
+  cmd --pick-example ls  выбрать пример (Enter/Ctrl-Y)
+  cmd --copy ls          скопировать первый пример
+  cmd --all              показать все системные команды
+  cmd index              обновить индекс macOS
+  cmd edit docker        своя карточка
 
-Горячая клавиша (zsh):
-  source ~/scripts/findcmd/shell/findcmd.widget.zsh
+Горячие клавиши (zsh): Ctrl+O, F2
+  source ~/scripts/findcmd/shell/cmd.widget.zsh
 """
 
 
@@ -75,7 +75,7 @@ def cmd_edit(name):
 
 def cmd_lookup(query, show_all=False):
     if not load_index():
-        print("Индекс не найден. Запусти: findcmd index")
+        print("Индекс не найден. Запусти: cmd index")
         return 1
 
     if query:
@@ -98,7 +98,7 @@ def cmd_lookup(query, show_all=False):
             return 0
 
         print(f"Команда «{query}» не найдена.")
-        print(f"Попробуй: findcmd --all {query}")
+        print(f"Попробуй: cmd --all {query}")
         return 1
 
     browse(recent(), show_all=show_all)
@@ -121,7 +121,7 @@ def main():
     if "--pick" in argv:
         name = browse(recent(), show_all=False, silent=True)
         if name:
-            pick_out = os.environ.get("FINDCMD_PICK_OUT")
+            pick_out = os.environ.get("CMD_PICK_OUT") or os.environ.get("FINDCMD_PICK_OUT")
             if pick_out:
                 with open(pick_out, "w", encoding="utf-8") as f:
                     f.write(name)
@@ -135,11 +135,11 @@ def main():
     if "--pick-example" in argv:
         idx = argv.index("--pick-example")
         if idx + 1 >= len(argv):
-            print("Укажи команду: findcmd --pick-example ls", file=sys.stderr)
+            print("Укажи команду: cmd --pick-example ls", file=sys.stderr)
             return 1
         example = pick_example(argv[idx + 1], silent=False)
         if example:
-            example_out = os.environ.get("FINDCMD_EXAMPLE_OUT")
+            example_out = os.environ.get("CMD_EXAMPLE_OUT") or os.environ.get("FINDCMD_EXAMPLE_OUT")
             if example_out:
                 with open(example_out, "w", encoding="utf-8") as f:
                     f.write(example)
@@ -150,7 +150,7 @@ def main():
     if "--copy" in argv:
         idx = argv.index("--copy")
         if idx + 1 >= len(argv):
-            print("Укажи команду: findcmd --copy ls", file=sys.stderr)
+            print("Укажи команду: cmd --copy ls", file=sys.stderr)
             return 1
         if copy_first_example(argv[idx + 1]):
             card = resolve(argv[idx + 1])
@@ -170,14 +170,14 @@ def main():
 
     if argv[0] == "edit":
         if len(argv) < 2:
-            print("Укажи команду: findcmd edit docker")
+            print("Укажи команду: cmd edit docker")
             return 1
         cmd_edit(argv[1])
         return 0
 
     if argv[0] == "related":
         if len(argv) < 2:
-            print("Укажи команду: findcmd related ls")
+            print("Укажи команду: cmd related ls")
             return 1
         browse_related(argv[1])
         return 0

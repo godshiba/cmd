@@ -22,7 +22,7 @@ def pick_command_fzf(entries, silent=False):
     lines = _build_fzf_input(entries)
     if not lines:
         if not silent:
-            print("Нет команд. Запусти: findcmd index")
+            print("Нет команд. Запусти: cmd index")
         return None
 
     py = shlex.quote(sys.executable)
@@ -60,7 +60,7 @@ def pick_command_fzf(entries, silent=False):
 
 
 def run_fallback(entries):
-    print("\n--- findcmd ---\n")
+    print("\n--- cmd ---\n")
     shown = 0
     indexed = []
 
@@ -85,7 +85,7 @@ def browse(recent_names, show_all=False, silent=False):
     entries = browser_entries(recent_names, show_all=show_all)
     if not entries:
         if not silent:
-            print("Пусто. Запусти: findcmd index")
+            print("Пусто. Запусти: cmd index")
         return None
 
     use_fzf = shutil.which("fzf") is not None

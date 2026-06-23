@@ -1,56 +1,36 @@
-# findcmd
+# cmd
 
-**Личный навигатор по командам терминала для macOS.**  
-Помогает не теряться среди команд: что делает, зачем нужна, примеры — на русском.
+Навигатор по командам терминала для macOS. Карточки на русском, примеры, группировка, поиск.
 
-> Personal terminal command navigator for macOS beginners. Russian cards + auto-indexed system commands.
+**cmd** — короткая команда в терминале. Репозиторий называется `findcmd` (исторически).
 
 ## Зачем
 
-- Забыл команду → `findcmd ls` → карточка с примерами
-- Не знаешь имя → `findcmd копир` → поиск по смыслу
-- Много команд → браузер с **группировкой** и **подкатегориями**
-- Быстро вставить пример → **Ctrl+`** в терминале
+| Ситуация | Решение |
+|----------|---------|
+| Забыл команду | `cmd ls` → карточка с примерами |
+| Не знаешь имя | `cmd копир` → поиск по смыслу |
+| Много всего | `cmd` → браузер с группами |
+| Быстро из shell | **Ctrl+O** или **F2** |
 
-## Быстрый старт
+## Установка
 
-### 1. Зависимости
+**Зависимость:** [fzf](https://github.com/junegunn/fzf)
 
 ```bash
 brew install fzf
-```
-
-### 2. Установка
-
-```bash
-git clone https://github.com/YOUR_USERNAME/findcmd.git ~/scripts/findcmd
+git clone https://github.com/danilsmely/cmd.git ~/scripts/findcmd
 cd ~/scripts/findcmd
-./findcmd index
+./cmd index
 ```
-
-### 3. PATH
 
 Добавь в `~/.zshrc`:
 
 ```bash
+unalias cmd 2>/dev/null
 export PATH="$HOME/scripts/findcmd:$PATH"
+source "$HOME/scripts/findcmd/shell/cmd.widget.zsh"
 ```
-
-### 4. Горячая клавиша (zsh)
-
-```bash
-source "$HOME/scripts/findcmd/shell/findcmd.widget.zsh"
-```
-
-| Клавиша | Действие |
-|---------|----------|
-| **Ctrl+`** | Открыть браузер findcmd |
-| **Ctrl+O** | Команда → пример → вставить в строку |
-| **Ctrl+G** / **F2** | Браузер (запасные) |
-
-Проверить привязки: `findcmd-keys`
-
-**Важно:** шорткаты работают только на **строке ввода** zsh (когда видишь `%` и курсор).
 
 Перезагрузи shell:
 
@@ -58,93 +38,68 @@ source "$HOME/scripts/findcmd/shell/findcmd.widget.zsh"
 source ~/.zshrc
 ```
 
-**Ctrl+` не срабатывает?** Шорткаты zsh (`Ctrl+G`, `Ctrl+O`) не видны в настройках Terminal — это нормально.
+## Горячие клавиши
 
-```bash
-findcmd-detect-key    # что реально приходит при нажатии
-findcmd-setup-grave   # инструкция для Ctrl+`
-```
+Работают только на **строке ввода** zsh (промпт `%`).
 
-Если детектор молчит на Ctrl+` — добавь в Terminal → Профили → Клавиатура → `+`:
-- Клавиша: **Ctrl+`**
-- Действие: **Отправить текст** → `^[[99~`
+| Клавиша | Действие |
+|---------|----------|
+| **Ctrl+O** | Открыть браузер |
+| **F2** | То же (запасной) |
 
-## Использование
+Проверка: `cmd-keys`
+
+## Команды
 
 | Команда | Описание |
 |---------|----------|
-| `findcmd` | Браузер: Essential → Recent → Useful |
-| `findcmd ls` | Карточка команды |
-| `findcmd копир` | Поиск по русским тегам и описанию |
-| `findcmd related ls` | Связанные команды (cd, pwd…) |
-| `findcmd --copy ls` | Скопировать первый пример в буфер |
-| `findcmd --pick-example ls` | Выбрать пример (Enter / Ctrl-Y) |
-| `findcmd --all` | + все 1200+ системных команд |
-| `findcmd index` | Обновить индекс macOS |
-| `findcmd edit docker` | Своя карточка |
+| `cmd` | Браузер: Essential → Recent → Useful |
+| `cmd ls` | Карточка команды |
+| `cmd копир` | Поиск по тегам и описанию |
+| `cmd related ls` | Связанные команды |
+| `cmd --copy ls` | Скопировать первый пример |
+| `cmd --all` | + все системные команды |
+| `cmd index` | Обновить индекс macOS |
+| `cmd edit docker` | Своя карточка |
 
 ### В браузере (fzf)
 
-- **Enter** — открыть карточку
-- **Ctrl+E** — выбрать пример (вставить / скопировать)
+- **Enter** — карточка команды
+- **Ctrl+E** — выбрать пример
 - Группы: `Основные · Навигация → Перемещение`
 
-## Уровни команд
+## Уровни данных
 
-| Уровень | Иконка | Откуда |
-|---------|--------|--------|
-| Essential | ⭐ | 32 русские карточки (`data/essential.json`) |
-| Recent | 🕐 | История просмотров (`~/.findcmd/history.json`) |
-| Useful | ✦ | ~70 полезных системных (`data/useful_system.json`) |
-| System | 💻 | Полный индекс macOS (`findcmd index`) |
+| Уровень | Иконка | Источник |
+|---------|--------|----------|
+| Essential | ⭐ | `data/essential.json` — 32 русские карточки |
+| Recent | 🕐 | `~/.cmd/history.json` |
+| Useful | ✦ | `data/useful_system.json` |
+| System | 💻 | Индекс macOS (`cmd index`) |
 
 ## Структура
 
 ```
 findcmd/
-├── findcmd                 # точка входа
+├── cmd                 # CLI
 ├── main.py
 ├── data/
-│   ├── essential.json      # русские карточки
-│   ├── useful_system.json  # полезные системные
-│   └── categories.json     # категории и подкатегории
 ├── lib/
 ├── shell/
-│   └── findcmd.widget.zsh  # горячие клавиши zsh
-└── ~/.findcmd/
-    ├── index.json
-    ├── custom.json
-    └── history.json
+│   └── cmd.widget.zsh  # Ctrl+O, F2
+└── ~/.cmd/             # индекс, история, свои карточки
 ```
 
-## Добавить свою карточку
+> При первом запуске данные из старого `~/.findcmd/` переносятся в `~/.cmd/` автоматически.
+
+## Своя карточка
 
 ```bash
-findcmd edit mytool
+cmd edit mytool
 ```
 
-Откроется `~/.findcmd/custom.json`. Пример поля:
-
-```json
-{
-  "name": "mytool",
-  "category": "dev",
-  "subcategory": "tools",
-  "title": "Мой инструмент",
-  "what": "Что делает",
-  "when": "Когда использовать",
-  "examples": [{"cmd": "mytool run", "desc": "Запуск"}],
-  "related": ["git", "brew"],
-  "tags": ["мой", "проект"]
-}
-```
-
-## Contributing
-
-1. Fork → branch → PR
-2. Новые Essential-команды → `data/essential.json`
-3. Полезные системные → `data/useful_system.json`
+Редактируется `~/.cmd/custom.json`.
 
 ## License
 
-MIT — see [LICENSE](LICENSE)
+MIT — [LICENSE](LICENSE)
