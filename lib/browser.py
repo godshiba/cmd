@@ -5,7 +5,7 @@ import subprocess
 import sys
 
 from .display import format_browser_line, format_card, format_group_header
-from .fzf_util import run_fzf
+from .fzf_util import run_fzf as exec_fzf
 from .history import record
 from .lookup import browser_entries, related_cards, resolve
 
@@ -30,7 +30,7 @@ def _build_fzf_input(entries):
     return lines
 
 
-def run_fzf(entries, silent=False):
+def pick_command_fzf(entries, silent=False):
     lines = _build_fzf_input(entries)
     if not lines:
         if not silent:
@@ -57,7 +57,7 @@ def run_fzf(entries, silent=False):
     ]
 
     try:
-        line = run_fzf(cmd, lines)
+        line = exec_fzf(cmd, lines)
     except FileNotFoundError:
         if silent:
             return None
@@ -109,7 +109,7 @@ def browse(recent_names, show_all=False, silent=False):
         return None
 
     use_fzf = shutil.which("fzf") is not None
-    name = run_fzf(entries, silent=silent) if use_fzf else run_fallback(entries)
+    name = pick_command_fzf(entries, silent=silent) if use_fzf else run_fallback(entries)
     if not name:
         return None
 
@@ -147,7 +147,7 @@ def browse_related(name):
         "--bind=enter:accept",
     ]
 
-    line = run_fzf(cmd, lines)
+    line = exec_fzf(cmd, lines)
     if not line:
         return
 
