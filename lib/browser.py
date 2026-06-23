@@ -4,7 +4,7 @@ import shutil
 import subprocess
 import sys
 
-from .display import format_browser_line, format_card, format_group_header
+from .display import format_browser_line, format_card
 from .fzf_util import run_fzf as exec_fzf
 from .history import record
 from .lookup import browser_entries, related_cards, resolve
@@ -15,19 +15,7 @@ def _preview_script():
 
 
 def _build_fzf_input(entries):
-    lines = []
-    last_group = None
-    for entry in entries:
-        group = (
-            entry.get("tier", ""),
-            entry.get("category_title", ""),
-            entry.get("subcategory_title", ""),
-        )
-        if group != last_group:
-            lines.append(format_group_header(entry))
-            last_group = group
-        lines.append(format_browser_line(entry))
-    return lines
+    return [format_browser_line(entry) for entry in entries]
 
 
 def pick_command_fzf(entries, silent=False):
@@ -46,7 +34,6 @@ def pick_command_fzf(entries, silent=False):
         "fzf",
         "--delimiter=\t",
         "--with-nth=1",
-        "--disabled=#.*",
         "--header=⭐ Основные | 🕐 Недавние | ✦ Полезные | Enter: карточка | Ctrl-E: пример",
         f"--preview={preview_cmd}",
         "--preview-window=right:55%:wrap",
@@ -65,10 +52,7 @@ def pick_command_fzf(entries, silent=False):
 
     if not line:
         if not silent:
-            print("Браузер закрыт (Esc) или fzf недоступен.")
-        return None
-
-    if line.startswith("#"):
+            print("Браузер закрыт (Esc).")
         return None
 
     parts = line.split("\t")
@@ -77,19 +61,10 @@ def pick_command_fzf(entries, silent=False):
 
 def run_fallback(entries):
     print("\n--- findcmd ---\n")
-    last_group = None
     shown = 0
     indexed = []
 
     for entry in entries:
-        group = (
-            entry.get("tier", ""),
-            entry.get("category_title", ""),
-            entry.get("subcategory_title", ""),
-        )
-        if group != last_group:
-            print(format_group_header(entry).split("\t")[0])
-            last_group = group
         print(f"  [{shown}] {format_browser_line(entry).split(chr(9))[0]}")
         indexed.append(entry)
         shown += 1

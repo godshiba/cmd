@@ -79,8 +79,8 @@ def format_browser_line(entry):
     cat = entry.get("category_title", "")
     sub = entry.get("subcategory_title", "")
     title = entry.get("title", "")
-    group = f"{cat}/{sub}" if sub else cat
-    display = f"{tier} {entry['name']} — {title}"
+    group = f"{cat} → {sub}" if sub else cat
+    display = f"{tier} {entry['name']} — {title}  [{group}]"
     return f"{display}\t{entry['name']}\t{group}\t{entry.get('tier', '')}"
 
 
