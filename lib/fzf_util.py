@@ -1,3 +1,4 @@
+import os
 import shutil
 import subprocess
 
@@ -7,9 +8,15 @@ def run_fzf(cmd, lines):
     if not shutil.which("fzf"):
         return None
 
+    input_data = "\n".join(lines)
+    run_cmd = cmd
+
+    if os.environ.get("FINDCMD_FROM_ZLE") and shutil.which("fzf-tmux"):
+        run_cmd = ["fzf-tmux", "-d", "85%"] + cmd[1:]
+
     result = subprocess.run(
-        cmd,
-        input="\n".join(lines),
+        run_cmd,
+        input=input_data,
         stdout=subprocess.PIPE,
         stderr=subprocess.DEVNULL,
         text=True,

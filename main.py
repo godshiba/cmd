@@ -121,7 +121,12 @@ def main():
     if "--pick" in argv:
         name = browse(recent(), show_all=False, silent=True)
         if name:
-            print(name)
+            pick_out = os.environ.get("FINDCMD_PICK_OUT")
+            if pick_out:
+                with open(pick_out, "w", encoding="utf-8") as f:
+                    f.write(name)
+            else:
+                print(name, flush=True)
         return 0
 
     show_all = "--all" in argv
@@ -134,7 +139,12 @@ def main():
             return 1
         example = pick_example(argv[idx + 1], silent=False)
         if example:
-            print(example, flush=True)
+            example_out = os.environ.get("FINDCMD_EXAMPLE_OUT")
+            if example_out:
+                with open(example_out, "w", encoding="utf-8") as f:
+                    f.write(example)
+            else:
+                print(example, flush=True)
         return 0
 
     if "--copy" in argv:
