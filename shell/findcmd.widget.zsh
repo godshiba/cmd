@@ -15,7 +15,6 @@ findcmd-open-widget() {
 
 findcmd-insert-widget() {
   emulate -L zsh
-  setopt localoptions noshwords
   zle -I
 
   local tmp name tmp2 example
@@ -41,11 +40,12 @@ findcmd-insert-widget() {
 zle -N findcmd-open-widget
 zle -N findcmd-insert-widget
 
-# Ctrl+` — открыть браузер (основной шорткат)
+# Ctrl+` на Mac часто приходит как ^@ (не \C-`)
+bindkey '^@' findcmd-open-widget
 bindkey '\C-`' findcmd-open-widget
 bindkey '^`' findcmd-open-widget
 
-# Ctrl+O — вставить пример команды в строку
+# Ctrl+O — вставить пример (сначала выбор команды, потом примера)
 bindkey '^O' findcmd-insert-widget
 
 # Запасные
@@ -56,8 +56,12 @@ fi
 
 findcmd-keys() {
   echo "findcmd шорткаты (на строке ввода zsh):"
-  echo "  Ctrl+\`  → браузер findcmd"
+  echo "  Ctrl+\`  → браузер (на Mac часто = Ctrl+@)"
   echo "  Ctrl+O   → команда → пример → вставка"
   echo "  Ctrl+G / F2 → браузер (запасные)"
+  echo ""
+  echo "Если Ctrl+\` не работает (звук «квак»):"
+  echo "  Terminal → Настройки → Клавиатура → отключи шорткат на Ctrl+\`"
+  echo "  или используй Ctrl+G"
   bindkey | command grep findcmd
 }
