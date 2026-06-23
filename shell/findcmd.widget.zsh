@@ -1,9 +1,7 @@
 # findcmd zsh widgets
 # source "$HOME/scripts/findcmd/shell/findcmd.widget.zsh"
 
-# Запуск findcmd на реальном терминале (обязательно из zle-виджета)
 _findcmd_tty() {
-  # Без TMUX — обычный fzf (fzf-tmux не используется)
   FINDCMD_FROM_ZLE=1 command "$@" < /dev/tty > /dev/tty 2>&1
   return $?
 }
@@ -43,20 +41,23 @@ findcmd-insert-widget() {
 zle -N findcmd-open-widget
 zle -N findcmd-insert-widget
 
-# Основные шорткаты (работают только на строке ввода zsh, не вне prompt)
-bindkey '^O' findcmd-open-widget    # Ctrl+O — браузер
-bindkey '^G' findcmd-open-widget    # Ctrl+G — браузер
-bindkey '\C-`' findcmd-insert-widget  # Ctrl+` — вставить пример
+# Ctrl+` — открыть браузер (основной шорткат)
+bindkey '\C-`' findcmd-open-widget
+bindkey '^`' findcmd-open-widget
 
-# F2 — запасной вариант, если Ctrl+G/O перехватывает терминал
+# Ctrl+O — вставить пример команды в строку
+bindkey '^O' findcmd-insert-widget
+
+# Запасные
+bindkey '^G' findcmd-open-widget
 if [[ -n ${terminfo[kf2]-} ]]; then
   bindkey "$terminfo[kf2]" findcmd-open-widget
 fi
 
-# Показать привязки: findcmd-keys
 findcmd-keys() {
   echo "findcmd шорткаты (на строке ввода zsh):"
-  echo "  Ctrl+O / Ctrl+G / F2  → браузер findcmd"
-  echo "  Ctrl+\`               → команда → пример → вставка"
+  echo "  Ctrl+\`  → браузер findcmd"
+  echo "  Ctrl+O   → команда → пример → вставка"
+  echo "  Ctrl+G / F2 → браузер (запасные)"
   bindkey | command grep findcmd
 }
