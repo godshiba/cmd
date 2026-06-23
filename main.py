@@ -132,9 +132,9 @@ def main():
         if idx + 1 >= len(argv):
             print("Укажи команду: findcmd --pick-example ls", file=sys.stderr)
             return 1
-        cmd = pick_example(argv[idx + 1], silent=False)
-        if cmd:
-            print(cmd)
+        example = pick_example(argv[idx + 1], silent=False)
+        if example:
+            print(example, flush=True)
         return 0
 
     if "--copy" in argv:

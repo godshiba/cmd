@@ -5,7 +5,7 @@ import subprocess
 import sys
 
 from .display import format_browser_line, format_card, format_group_header
-from .examples import pick_example
+from .fzf_util import run_fzf
 from .history import record
 from .lookup import browser_entries, related_cards, resolve
 
@@ -41,6 +41,7 @@ def run_fzf(entries, silent=False):
     script = shlex.quote(_preview_script())
     preview_cmd = f"{py} {script} --preview {{2}}"
     pick_example_cmd = f"{py} {script} --pick-example {{2}}"
+
     cmd = [
         "fzf",
         "--delimiter=\t",
@@ -51,28 +52,20 @@ def run_fzf(entries, silent=False):
         "--preview-window=right:55%:wrap",
         "--height=85%",
         "--layout=reverse",
-        f"--bind=ctrl-e:execute-silent({pick_example_cmd})+abort",
+        "--bind=enter:accept",
+        f"--bind=ctrl-e:execute({pick_example_cmd})+abort",
     ]
 
     try:
-        result = subprocess.run(
-            cmd,
-            input="\n".join(lines),
-            text=True,
-            capture_output=True,
-            check=False,
-        )
+        line = run_fzf(cmd, lines)
     except FileNotFoundError:
         if silent:
             return None
         return run_fallback(entries)
 
-    if result.returncode != 0 or not result.stdout.strip():
+    if not line or line.startswith("#"):
         return None
 
-    line = result.stdout.strip()
-    if line.startswith("#"):
-        return None
     parts = line.split("\t")
     return parts[1].strip() if len(parts) > 1 else None
 
@@ -136,8 +129,29 @@ def browse_related(name):
         print(f"Нет связанных команд для «{name}».")
         return
 
-    entries = [{**c, "tier": c.get("tier", "essential")} for c in cards]
-    picked = run_fzf(entries, silent=False)
+    header = f"Связанные с «{name}» — Enter: открыть | Esc: отмена"
+    py = shlex.quote(sys.executable)
+    script = shlex.quote(_preview_script())
+    preview_cmd = f"{py} {script} --preview {{2}}"
+
+    lines = [format_browser_line(c) for c in cards]
+    cmd = [
+        "fzf",
+        "--delimiter=\t",
+        "--with-nth=1",
+        f"--header={header}",
+        f"--preview={preview_cmd}",
+        "--preview-window=right:55%:wrap",
+        "--height=50%",
+        "--layout=reverse",
+        "--bind=enter:accept",
+    ]
+
+    line = run_fzf(cmd, lines)
+    if not line:
+        return
+
+    picked = line.split("\t")[1].strip() if "\t" in line else None
     if picked:
         card = resolve(picked)
         if card:
