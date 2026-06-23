@@ -3,7 +3,9 @@
 
 # Запуск findcmd на реальном терминале (обязательно из zle-виджета)
 _findcmd_tty() {
+  # Без TMUX — обычный fzf (fzf-tmux не используется)
   FINDCMD_FROM_ZLE=1 command "$@" < /dev/tty > /dev/tty 2>&1
+  return $?
 }
 
 findcmd-open-widget() {

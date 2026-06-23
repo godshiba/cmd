@@ -11,7 +11,12 @@ def run_fzf(cmd, lines):
     input_data = "\n".join(lines)
     run_cmd = cmd
 
-    if os.environ.get("FINDCMD_FROM_ZLE") and shutil.which("fzf-tmux"):
+    # fzf-tmux только внутри активной tmux-сессии
+    if (
+        os.environ.get("FINDCMD_FROM_ZLE")
+        and os.environ.get("TMUX")
+        and shutil.which("fzf-tmux")
+    ):
         run_cmd = ["fzf-tmux", "-d", "85%"] + cmd[1:]
 
     result = subprocess.run(

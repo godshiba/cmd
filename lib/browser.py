@@ -63,7 +63,12 @@ def pick_command_fzf(entries, silent=False):
             return None
         return run_fallback(entries)
 
-    if not line or line.startswith("#"):
+    if not line:
+        if not silent:
+            print("Браузер закрыт (Esc) или fzf недоступен.")
+        return None
+
+    if line.startswith("#"):
         return None
 
     parts = line.split("\t")
