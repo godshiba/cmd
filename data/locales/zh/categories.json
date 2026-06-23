@@ -1,0 +1,13 @@
+{
+  "navigation": {"title": "导航", "order": 1, "subs": {"basics": {"title": "移动", "order": 1}, "view": {"title": "浏览", "order": 2}}},
+  "files": {"title": "文件", "order": 2, "subs": {"manage": {"title": "创建与修改", "order": 1}, "view": {"title": "读取与查看", "order": 2}}},
+  "search": {"title": "搜索", "order": 3, "subs": {"find": {"title": "查找文件与文本", "order": 1}}},
+  "system": {"title": "系统", "order": 4, "subs": {"info": {"title": "信息", "order": 1}, "config": {"title": "配置", "order": 2}}},
+  "network": {"title": "网络", "order": 5, "subs": {"remote": {"title": "连接", "order": 1}}},
+  "packages": {"title": "软件包", "order": 6, "subs": {"install": {"title": "安装", "order": 1}}},
+  "git": {"title": "Git", "order": 7, "subs": {"basics": {"title": "基础", "order": 1}}},
+  "processes": {"title": "进程", "order": 8, "subs": {"manage": {"title": "管理", "order": 1}}},
+  "text": {"title": "文本", "order": 9, "subs": {"process": {"title": "处理", "order": 1}}},
+  "archive": {"title": "归档", "order": 10, "subs": {"compress": {"title": "压缩", "order": 1}}},
+  "dev": {"title": "开发", "order": 11, "subs": {"tools": {"title": "工具", "order": 1}}}
+}

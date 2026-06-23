@@ -19,6 +19,7 @@ def run_fzf(cmd, lines):
     ):
         run_cmd = ["fzf-tmux", "-d", "85%"] + cmd[1:]
 
+    # Feed items via stdin pipe; fzf opens /dev/tty for keyboard when stdin is not a TTY.
     result = subprocess.run(
         run_cmd,
         input=input_data,

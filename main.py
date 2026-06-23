@@ -5,38 +5,59 @@ import subprocess
 import sys
 
 from lib.browser import browse, browse_related, preview
-from lib.clipboard import copy_text
 from lib.display import format_card, format_search_results
 from lib.examples import copy_first_example, pick_example
 from lib.history import record, recent
+from lib.i18n import get_locale, language_choices, set_locale, t
+from lib.lang_menu import pick_language
 from lib.index import build_index, load_index
-from lib.lookup import related_cards, resolve, search
+from lib.lookup import resolve, search
 from lib.paths import CUSTOM_PATH, INDEX_PATH, ensure_user_dir
+from lib.version import get_version
 
 
-HELP = """cmd — навигатор по командам терминала
+def build_help():
+    lines = [
+        t("help.title"),
+        "",
+        t("help.usage_header"),
+        "  cmd                    fzf browser",
+        "  cmd ls                 command card",
+        "  cmd copy               semantic search",
+        "  cmd related ls         related commands",
+        "  cmd --pick             pick command (shell widget)",
+        "  cmd --pick-example ls  pick example (Enter/Ctrl-Y)",
+        "  cmd --copy ls          copy first example",
+        "  cmd --all              include all system commands",
+        "  cmd index              rebuild macOS index",
+        "  cmd edit docker        personal card",
+        "  cmd lang               language menu (fzf)",
+        "  cmd lang en|ru|zh      set language directly",
+        "  cmd --version          show version",
+        "",
+        t("help.hotkeys"),
+        t("help.widget"),
+    ]
+    return "\n".join(lines)
 
-Использование:
-  cmd                    браузер с группировкой (fzf)
-  cmd ls                 карточка команды
-  cmd копир              поиск по ключевому слову
-  cmd related ls         связанные команды
-  cmd --pick             выбрать команду (для shell-виджета)
-  cmd --pick-example ls  выбрать пример (Enter/Ctrl-Y)
-  cmd --copy ls          скопировать первый пример
-  cmd --all              показать все системные команды
-  cmd index              обновить индекс macOS
-  cmd edit docker        своя карточка
 
-Горячие клавиши (zsh): Ctrl+O, F2
-  source ~/scripts/findcmd/shell/cmd.widget.zsh
-"""
+def cmd_lang(arg=None):
+    if not arg:
+        return pick_language()
+    try:
+        code = set_locale(arg)
+    except ValueError:
+        print(t("lang.invalid", code=arg), file=sys.stderr)
+        return 1
+    name = next((n for c, n in language_choices() if c == code), code)
+    print(t("lang.set", name=name, code=code))
+    return 0
 
 
 def cmd_index():
-    print("Строю индекс команд macOS...")
+    print(t("index.building"))
     data = build_index()
-    print(f"Готово: {data['count']} команд → {INDEX_PATH}")
+    print(t("index.done", count=data["count"], path=INDEX_PATH))
 
 
 def cmd_edit(name):
@@ -54,7 +75,7 @@ def cmd_edit(name):
             "name": name,
             "category": base.get("category", "system"),
             "subcategory": base.get("subcategory", ""),
-            "title": base.get("title", f"Команда {name}"),
+            "title": base.get("title", name),
             "what": base.get("what", ""),
             "when": base.get("when", ""),
             "when_not": base.get("when_not", ""),
@@ -70,13 +91,11 @@ def cmd_edit(name):
 
     editor = os.environ.get("EDITOR", "nano")
     subprocess.call([editor, CUSTOM_PATH])
-    print(f"Сохранено в {CUSTOM_PATH}")
+    print(t("edit.saved", path=CUSTOM_PATH))
 
 
 def cmd_lookup(query, show_all=False):
-    if not load_index():
-        print("Индекс не найден. Запусти: cmd index")
-        return 1
+    has_index = load_index() is not None
 
     if query:
         card = resolve(query)
@@ -84,6 +103,10 @@ def cmd_lookup(query, show_all=False):
             record(query)
             print(format_card(card))
             return 0
+
+        if show_all and not has_index:
+            print(t("index.missing"))
+            return 1
 
         results = search(query, include_system=show_all)
         if len(results) == 1:
@@ -97,8 +120,15 @@ def cmd_lookup(query, show_all=False):
             print(format_search_results(results, query))
             return 0
 
-        print(f"Команда «{query}» не найдена.")
-        print(f"Попробуй: cmd --all {query}")
+        print(t("lookup.not_found", query=query))
+        if not has_index:
+            print(t("index.missing"))
+        else:
+            print(t("lookup.try_all", query=query))
+        return 1
+
+    if show_all and not has_index:
+        print(t("index.missing"))
         return 1
 
     browse(recent(), show_all=show_all)
@@ -115,7 +145,11 @@ def main():
         return 0
 
     if "-h" in argv or "--help" in argv:
-        print(HELP)
+        print(build_help())
+        return 0
+
+    if "--version" in argv or "-v" in argv:
+        print(f"cmd {get_version()}")
         return 0
 
     if "--pick" in argv:
@@ -135,7 +169,7 @@ def main():
     if "--pick-example" in argv:
         idx = argv.index("--pick-example")
         if idx + 1 >= len(argv):
-            print("Укажи команду: cmd --pick-example ls", file=sys.stderr)
+            print(t("pick_example.usage"), file=sys.stderr)
             return 1
         example = pick_example(argv[idx + 1], silent=False)
         if example:
@@ -150,14 +184,14 @@ def main():
     if "--copy" in argv:
         idx = argv.index("--copy")
         if idx + 1 >= len(argv):
-            print("Укажи команду: cmd --copy ls", file=sys.stderr)
+            print(t("copy.usage"), file=sys.stderr)
             return 1
         if copy_first_example(argv[idx + 1]):
             card = resolve(argv[idx + 1])
             ex = card["examples"][0]["cmd"] if card and card.get("examples") else ""
-            print(f"Скопировано: {ex}")
+            print(t("copy.done", cmd=ex))
         else:
-            print("Нет примера для копирования.")
+            print(t("copy.none"))
             return 1
         return 0
 
@@ -168,16 +202,19 @@ def main():
         cmd_index()
         return 0
 
+    if argv[0] == "lang":
+        return cmd_lang(argv[1] if len(argv) > 1 else None)
+
     if argv[0] == "edit":
         if len(argv) < 2:
-            print("Укажи команду: cmd edit docker")
+            print(t("edit.usage"))
             return 1
         cmd_edit(argv[1])
         return 0
 
     if argv[0] == "related":
         if len(argv) < 2:
-            print("Укажи команду: cmd related ls")
+            print(t("related.usage"))
             return 1
         browse_related(argv[1])
         return 0

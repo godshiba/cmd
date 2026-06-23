@@ -7,6 +7,7 @@ import sys
 from .display import format_browser_line, format_card
 from .fzf_util import run_fzf as exec_fzf
 from .history import record
+from .i18n import t
 from .lookup import browser_entries, related_cards, resolve
 
 
@@ -22,7 +23,7 @@ def pick_command_fzf(entries, silent=False):
     lines = _build_fzf_input(entries)
     if not lines:
         if not silent:
-            print("Нет команд. Запусти: cmd index")
+            print(t("browser.no_commands"))
         return None
 
     py = shlex.quote(sys.executable)
@@ -34,7 +35,7 @@ def pick_command_fzf(entries, silent=False):
         "fzf",
         "--delimiter=\t",
         "--with-nth=1",
-        "--header=⭐ Основные | 🕐 Недавние | ✦ Полезные | Enter: карточка | Ctrl-E: пример",
+        f"--header={t('browser.fzf_header')}",
         f"--preview={preview_cmd}",
         "--preview-window=right:55%:wrap",
         "--height=85%",
@@ -52,7 +53,7 @@ def pick_command_fzf(entries, silent=False):
 
     if not line:
         if not silent:
-            print("Браузер закрыт (Esc).")
+            print(t("browser.closed"))
         return None
 
     parts = line.split("\t")
@@ -60,7 +61,7 @@ def pick_command_fzf(entries, silent=False):
 
 
 def run_fallback(entries):
-    print("\n--- cmd ---\n")
+    print(f"\n{t('browser.fallback_title')}\n")
     shown = 0
     indexed = []
 
@@ -72,7 +73,7 @@ def run_fallback(entries):
             break
 
     try:
-        choice = input("\nНомер (Enter — выход): ").strip()
+        choice = input(f"\n{t('browser.fallback_prompt')}").strip()
     except (EOFError, KeyboardInterrupt):
         return None
 
@@ -85,7 +86,7 @@ def browse(recent_names, show_all=False, silent=False):
     entries = browser_entries(recent_names, show_all=show_all)
     if not entries:
         if not silent:
-            print("Пусто. Запусти: cmd index")
+            print(t("browser.empty"))
         return None
 
     use_fzf = shutil.which("fzf") is not None
@@ -106,32 +107,44 @@ def browse(recent_names, show_all=False, silent=False):
 def browse_related(name):
     cards = related_cards(name)
     if not cards:
-        print(f"Нет связанных команд для «{name}».")
+        print(t("browser.related_none", name=name))
         return
 
-    header = f"Связанные с «{name}» — Enter: открыть | Esc: отмена"
-    py = shlex.quote(sys.executable)
-    script = shlex.quote(_preview_script())
-    preview_cmd = f"{py} {script} --preview {{2}}"
+    use_fzf = shutil.which("fzf") is not None
+    if not use_fzf:
+        print(f"\n{t('browser.fallback_title')}\n")
+        for i, card in enumerate(cards):
+            print(f"  [{i}] {format_browser_line(card).split(chr(9))[0]}")
+        try:
+            choice = input(f"\n{t('browser.fallback_prompt')}").strip()
+        except (EOFError, KeyboardInterrupt):
+            return
+        if not choice.isdigit() or int(choice) >= len(cards):
+            return
+        picked = cards[int(choice)]["name"]
+    else:
+        py = shlex.quote(sys.executable)
+        script = shlex.quote(_preview_script())
+        preview_cmd = f"{py} {script} --preview {{2}}"
 
-    lines = [format_browser_line(c) for c in cards]
-    cmd = [
-        "fzf",
-        "--delimiter=\t",
-        "--with-nth=1",
-        f"--header={header}",
-        f"--preview={preview_cmd}",
-        "--preview-window=right:55%:wrap",
-        "--height=50%",
-        "--layout=reverse",
-        "--bind=enter:accept",
-    ]
+        lines = [format_browser_line(c) for c in cards]
+        cmd = [
+            "fzf",
+            "--delimiter=\t",
+            "--with-nth=1",
+            f"--header={t('browser.related_header', name=name)}",
+            f"--preview={preview_cmd}",
+            "--preview-window=right:55%:wrap",
+            "--height=50%",
+            "--layout=reverse",
+            "--bind=enter:accept",
+        ]
 
-    line = exec_fzf(cmd, lines)
-    if not line:
-        return
+        line = exec_fzf(cmd, lines)
+        if not line:
+            return
+        picked = line.split("\t")[1].strip() if "\t" in line else None
 
-    picked = line.split("\t")[1].strip() if "\t" in line else None
     if picked:
         card = resolve(picked)
         if card:
@@ -144,4 +157,4 @@ def preview(name):
     if card:
         print(format_card(card, compact=True))
     else:
-        print(f"Команда «{name}» не найдена")
+        print(t("browser.not_found", name=name))

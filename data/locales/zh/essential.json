@@ -1,0 +1,968 @@
+[
+  {
+    "name": "pwd",
+    "category": "navigation",
+    "title": "我在哪里",
+    "what": "显示当前文件夹（工作目录）的完整路径。",
+    "when": "在文件系统中迷路时，需要知道当前在哪个文件夹。",
+    "when_not": "要进入其他文件夹 — 使用 cd。",
+    "examples": [
+      {
+        "cmd": "pwd",
+        "desc": "显示当前路径"
+      }
+    ],
+    "danger": false,
+    "related": [
+      "cd",
+      "ls"
+    ],
+    "tags": [
+      "路径",
+      "文件夹",
+      "位置",
+      "导航"
+    ],
+    "subcategory": "basics"
+  },
+  {
+    "name": "cd",
+    "category": "navigation",
+    "title": "进入文件夹",
+    "what": "更改当前工作目录 — 「进入」另一个文件夹。",
+    "when": "需要进入其他文件夹处理其中的文件时。",
+    "when_not": "要在文件夹之间复制文件 — 使用 cp。",
+    "examples": [
+      {
+        "cmd": "cd Documents",
+        "desc": "进入 Documents 文件夹"
+      },
+      {
+        "cmd": "cd ..",
+        "desc": "返回上一级"
+      },
+      {
+        "cmd": "cd ~",
+        "desc": "进入主目录"
+      },
+      {
+        "cmd": "cd -",
+        "desc": "返回上一个文件夹"
+      }
+    ],
+    "danger": false,
+    "related": [
+      "pwd",
+      "ls"
+    ],
+    "tags": [
+      "文件夹",
+      "进入",
+      "导航"
+    ],
+    "subcategory": "basics"
+  },
+  {
+    "name": "ls",
+    "category": "navigation",
+    "title": "查看文件夹内容",
+    "what": "列出当前（或指定）目录中的文件和文件夹。",
+    "when": "需要查看文件夹里有什么时。",
+    "when_not": "要读取文件内容 — 使用 cat 或 less。",
+    "examples": [
+      {
+        "cmd": "ls",
+        "desc": "基本列表"
+      },
+      {
+        "cmd": "ls -la",
+        "desc": "所有文件（含隐藏），带权限信息"
+      },
+      {
+        "cmd": "ls ~/Downloads",
+        "desc": "列出指定文件夹中的文件"
+      }
+    ],
+    "danger": false,
+    "related": [
+      "cd",
+      "pwd",
+      "cat"
+    ],
+    "tags": [
+      "文件",
+      "文件夹",
+      "列表",
+      "查看"
+    ],
+    "subcategory": "view"
+  },
+  {
+    "name": "clear",
+    "category": "navigation",
+    "title": "清屏",
+    "what": "清除终端屏幕上的所有文字，方便查看。",
+    "when": "屏幕内容太多，想重新开始时。",
+    "when_not": "不会删除命令历史 — 历史仍在，只是看不见了。",
+    "examples": [
+      {
+        "cmd": "clear",
+        "desc": "清屏"
+      }
+    ],
+    "danger": false,
+    "related": [
+      "history"
+    ],
+    "tags": [
+      "屏幕",
+      "清除"
+    ],
+    "subcategory": "view"
+  },
+  {
+    "name": "open",
+    "category": "navigation",
+    "title": "在 macOS 中打开文件或文件夹",
+    "what": "用默认程序打开文件或文件夹（Finder、浏览器等）。",
+    "when": "需要以图形方式打开文件，而不是在终端中查看时。",
+    "when_not": "要在终端中读取文件文本 — 使用 cat 或 less。",
+    "examples": [
+      {
+        "cmd": "open .",
+        "desc": "在 Finder 中打开当前文件夹"
+      },
+      {
+        "cmd": "open file.pdf",
+        "desc": "用默认程序打开 PDF"
+      },
+      {
+        "cmd": "open https://example.com",
+        "desc": "在浏览器中打开链接"
+      }
+    ],
+    "danger": false,
+    "related": [
+      "ls",
+      "cat"
+    ],
+    "tags": [
+      "打开",
+      "finder",
+      "macos"
+    ],
+    "subcategory": "view"
+  },
+  {
+    "name": "cp",
+    "category": "files",
+    "title": "复制文件或文件夹",
+    "what": "在另一位置创建文件或文件夹的副本。",
+    "when": "需要复制文件而不删除原件时。",
+    "when_not": "要移动文件 — 使用 mv。",
+    "examples": [
+      {
+        "cmd": "cp file.txt backup.txt",
+        "desc": "复制文件"
+      },
+      {
+        "cmd": "cp -r folder/ backup/",
+        "desc": "复制整个文件夹"
+      }
+    ],
+    "danger": false,
+    "related": [
+      "mv",
+      "rm",
+      "mkdir"
+    ],
+    "tags": [
+      "复制",
+      "文件",
+      "文件夹"
+    ],
+    "subcategory": "manage"
+  },
+  {
+    "name": "mv",
+    "category": "files",
+    "title": "移动或重命名",
+    "what": "将文件/文件夹移动到其他位置，或重命名。",
+    "when": "需要移动文件或给它起新名字时。",
+    "when_not": "要复制并保留原件 — 使用 cp。",
+    "examples": [
+      {
+        "cmd": "mv old.txt new.txt",
+        "desc": "重命名文件"
+      },
+      {
+        "cmd": "mv file.txt ~/Documents/",
+        "desc": "移动到其他文件夹"
+      }
+    ],
+    "danger": false,
+    "related": [
+      "cp",
+      "rm"
+    ],
+    "tags": [
+      "移动",
+      "重命名",
+      "文件"
+    ],
+    "subcategory": "manage"
+  },
+  {
+    "name": "rm",
+    "category": "files",
+    "title": "删除文件或文件夹",
+    "what": "永久删除文件和文件夹。终端中没有废纸篓！",
+    "when": "确定文件不再需要时。",
+    "when_not": "如有疑虑 — 不要删除。rm -rf 的误操作可能摧毁重要数据。",
+    "examples": [
+      {
+        "cmd": "rm file.txt",
+        "desc": "删除单个文件"
+      },
+      {
+        "cmd": "rm -r folder/",
+        "desc": "删除文件夹及其全部内容"
+      }
+    ],
+    "danger": true,
+    "danger_note": "rm -rf 无需确认且不进废纸篓。请仔细检查路径！",
+    "related": [
+      "cp",
+      "mv",
+      "mkdir"
+    ],
+    "tags": [
+      "删除",
+      "文件",
+      "危险"
+    ],
+    "subcategory": "manage"
+  },
+  {
+    "name": "mkdir",
+    "category": "files",
+    "title": "创建文件夹",
+    "what": "创建指定名称的新目录（文件夹）。",
+    "when": "需要在新文件夹中整理文件时。",
+    "when_not": "要创建空文件 — 使用 touch。",
+    "examples": [
+      {
+        "cmd": "mkdir projects",
+        "desc": "创建 projects 文件夹"
+      },
+      {
+        "cmd": "mkdir -p a/b/c",
+        "desc": "一次性创建嵌套文件夹"
+      }
+    ],
+    "danger": false,
+    "related": [
+      "touch",
+      "cd",
+      "ls"
+    ],
+    "tags": [
+      "创建",
+      "文件夹",
+      "目录"
+    ],
+    "subcategory": "manage"
+  },
+  {
+    "name": "touch",
+    "category": "files",
+    "title": "创建空文件",
+    "what": "创建新的空文件，或更新已有文件的修改时间。",
+    "when": "需要快速创建空文件时。",
+    "when_not": "要创建文件夹 — 使用 mkdir。",
+    "examples": [
+      {
+        "cmd": "touch notes.txt",
+        "desc": "创建空文件 notes.txt"
+      },
+      {
+        "cmd": "touch a.txt b.txt",
+        "desc": "创建多个文件"
+      }
+    ],
+    "danger": false,
+    "related": [
+      "mkdir",
+      "cat"
+    ],
+    "tags": [
+      "创建",
+      "文件"
+    ],
+    "subcategory": "manage"
+  },
+  {
+    "name": "cat",
+    "category": "files",
+    "title": "显示文件内容",
+    "what": "将文件的全部文本输出到终端。",
+    "when": "适用于较小的文本文件 — 配置文件、脚本、笔记。",
+    "when_not": "大文件请用 less，否则屏幕会被文字填满。",
+    "examples": [
+      {
+        "cmd": "cat file.txt",
+        "desc": "显示文件内容"
+      },
+      {
+        "cmd": "cat a.txt b.txt",
+        "desc": "依次显示多个文件"
+      }
+    ],
+    "danger": false,
+    "related": [
+      "less",
+      "head",
+      "tail"
+    ],
+    "tags": [
+      "读取",
+      "文件",
+      "文本",
+      "查看"
+    ],
+    "subcategory": "view"
+  },
+  {
+    "name": "less",
+    "category": "files",
+    "title": "滚动查看文件",
+    "what": "以分页方式打开文件查看，可以上下滚动。",
+    "when": "适用于大文件 — 日志、长文本。",
+    "when_not": "小文件用 cat 就够了。",
+    "examples": [
+      {
+        "cmd": "less file.log",
+        "desc": "打开文件（q — 退出，/ — 搜索）"
+      }
+    ],
+    "danger": false,
+    "related": [
+      "cat",
+      "head",
+      "tail"
+    ],
+    "tags": [
+      "读取",
+      "文件",
+      "查看",
+      "日志"
+    ],
+    "subcategory": "view"
+  },
+  {
+    "name": "head",
+    "category": "files",
+    "title": "文件开头几行",
+    "what": "显示文件开头（默认 10 行）。",
+    "when": "需要快速查看文件开头 — CSV 表头、日志开头。",
+    "when_not": "要看文件末尾 — 使用 tail。",
+    "examples": [
+      {
+        "cmd": "head file.txt",
+        "desc": "前 10 行"
+      },
+      {
+        "cmd": "head -n 20 file.txt",
+        "desc": "前 20 行"
+      }
+    ],
+    "danger": false,
+    "related": [
+      "tail",
+      "cat"
+    ],
+    "tags": [
+      "文件",
+      "开头",
+      "行"
+    ],
+    "subcategory": "view"
+  },
+  {
+    "name": "tail",
+    "category": "files",
+    "title": "文件末尾几行",
+    "what": "显示文件末尾（默认 10 行）。",
+    "when": "查看日志 — 看最近的记录。tail -f 可实时跟踪文件。",
+    "when_not": "要看文件开头 — 使用 head。",
+    "examples": [
+      {
+        "cmd": "tail file.log",
+        "desc": "最后 10 行"
+      },
+      {
+        "cmd": "tail -f file.log",
+        "desc": "实时跟踪新行（Ctrl+C — 退出）"
+      }
+    ],
+    "danger": false,
+    "related": [
+      "head",
+      "less"
+    ],
+    "tags": [
+      "文件",
+      "末尾",
+      "日志",
+      "行"
+    ],
+    "subcategory": "view"
+  },
+  {
+    "name": "find",
+    "category": "search",
+    "title": "按名称或条件查找文件",
+    "what": "在指定目录中递归搜索文件和文件夹。",
+    "when": "知道文件名的部分内容，但不知道它在哪里时。",
+    "when_not": "要在文件内搜索文本 — 使用 grep。",
+    "examples": [
+      {
+        "cmd": "find . -name '*.txt'",
+        "desc": "在当前文件夹及子目录中查找所有 .txt"
+      },
+      {
+        "cmd": "find ~/Downloads -name report*",
+        "desc": "查找以 report 开头的文件"
+      }
+    ],
+    "danger": false,
+    "related": [
+      "grep",
+      "ls"
+    ],
+    "tags": [
+      "查找",
+      "搜索",
+      "文件"
+    ],
+    "subcategory": "find"
+  },
+  {
+    "name": "grep",
+    "category": "search",
+    "title": "在文件内搜索文本",
+    "what": "搜索包含指定文本或模式的行。",
+    "when": "需要在文件或命令输出中查找单词或短语时。",
+    "when_not": "要按文件名搜索 — 使用 find。",
+    "examples": [
+      {
+        "cmd": "grep 'error' file.log",
+        "desc": "在文件中查找包含 'error' 的行"
+      },
+      {
+        "cmd": "grep -r 'TODO' .",
+        "desc": "在文件夹所有文件中查找 'TODO'"
+      },
+      {
+        "cmd": "ls -la | grep '.txt'",
+        "desc": "过滤其他命令的输出"
+      }
+    ],
+    "danger": false,
+    "related": [
+      "find",
+      "cat"
+    ],
+    "tags": [
+      "查找",
+      "搜索",
+      "文本",
+      "过滤"
+    ],
+    "subcategory": "find"
+  },
+  {
+    "name": "which",
+    "category": "search",
+    "title": "命令在哪里",
+    "what": "显示命令可执行文件的完整路径。",
+    "when": "需要知道输入命令时会运行哪个程序时。",
+    "when_not": "要搜索文件 — 使用 find。",
+    "examples": [
+      {
+        "cmd": "which python3",
+        "desc": "python3 安装在哪里"
+      },
+      {
+        "cmd": "which git",
+        "desc": "git 安装在哪里"
+      }
+    ],
+    "danger": false,
+    "related": [
+      "where",
+      "brew"
+    ],
+    "tags": [
+      "路径",
+      "命令",
+      "位置"
+    ],
+    "subcategory": "find"
+  },
+  {
+    "name": "where",
+    "category": "search",
+    "title": "命令的所有位置",
+    "what": "显示找到命令的所有路径（在 zsh 中等同于 which -a）。",
+    "when": "which 只显示一个位置，但你怀疑有多个版本时。",
+    "when_not": "通常 which 就够了。",
+    "examples": [
+      {
+        "cmd": "where python3",
+        "desc": "所有已安装的 python3"
+      }
+    ],
+    "danger": false,
+    "related": [
+      "which"
+    ],
+    "tags": [
+      "路径",
+      "命令"
+    ],
+    "subcategory": "find"
+  },
+  {
+    "name": "man",
+    "category": "system",
+    "title": "命令完整文档",
+    "what": "打开命令的官方手册（manual）。内容详细，但是英文。",
+    "when": "需要 cmd 中没有的所有选项和细节时。",
+    "when_not": "快速入门 — 先用 cmd，深入查阅再用 man。",
+    "examples": [
+      {
+        "cmd": "man ls",
+        "desc": "ls 帮助（q — 退出，/ — 搜索）"
+      },
+      {
+        "cmd": "man grep",
+        "desc": "grep 帮助"
+      }
+    ],
+    "danger": false,
+    "related": [
+      "cmd"
+    ],
+    "tags": [
+      "帮助",
+      "文档",
+      "手册"
+    ],
+    "subcategory": "info"
+  },
+  {
+    "name": "history",
+    "category": "system",
+    "title": "已输入命令的历史",
+    "what": "显示你在此终端中已输入的命令列表。",
+    "when": "忘记之前输入了什么，或想重复某条命令时。",
+    "when_not": "要查命令用法 — 使用 cmd。",
+    "examples": [
+      {
+        "cmd": "history",
+        "desc": "显示全部历史"
+      },
+      {
+        "cmd": "history | grep git",
+        "desc": "在历史中查找 git 命令"
+      }
+    ],
+    "danger": false,
+    "related": [
+      "clear"
+    ],
+    "tags": [
+      "历史",
+      "命令",
+      "重复"
+    ],
+    "subcategory": "info"
+  },
+  {
+    "name": "echo",
+    "category": "system",
+    "title": "在终端输出文本",
+    "what": "打印指定的文本或变量值。",
+    "when": "检查变量、在脚本中输出、简单消息。",
+    "when_not": "不是用来读文件 — 使用 cat。",
+    "examples": [
+      {
+        "cmd": "echo Hello",
+        "desc": "输出文本"
+      },
+      {
+        "cmd": "echo $PATH",
+        "desc": "显示 PATH 变量值"
+      }
+    ],
+    "danger": false,
+    "related": [
+      "cat"
+    ],
+    "tags": [
+      "输出",
+      "文本",
+      "打印"
+    ],
+    "subcategory": "config"
+  },
+  {
+    "name": "chmod",
+    "category": "system",
+    "title": "修改文件权限",
+    "what": "更改权限：谁可以读取、写入、执行文件。",
+    "when": "脚本无法运行 — 可能缺少执行权限。",
+    "when_not": "慎用 chmod 777 — 会给所有人完全访问权限。",
+    "examples": [
+      {
+        "cmd": "chmod +x script.sh",
+        "desc": "允许运行脚本"
+      },
+      {
+        "cmd": "ls -la",
+        "desc": "先查看当前权限（第一列）"
+      }
+    ],
+    "danger": true,
+    "danger_note": "错误的权限可能导致文件无法访问或存在安全隐患。",
+    "related": [
+      "ls",
+      "chown"
+    ],
+    "tags": [
+      "权限",
+      "访问",
+      "许可"
+    ],
+    "subcategory": "config"
+  },
+  {
+    "name": "df",
+    "category": "system",
+    "title": "磁盘剩余空间",
+    "what": "显示磁盘已用和可用空间。",
+    "when": "磁盘快满了或需要检查可用空间时。",
+    "when_not": "要查看特定文件夹大小 — 使用 du。",
+    "examples": [
+      {
+        "cmd": "df -h",
+        "desc": "以易读格式显示磁盘空间（GB、MB）"
+      }
+    ],
+    "danger": false,
+    "related": [
+      "du"
+    ],
+    "tags": [
+      "磁盘",
+      "空间",
+      "存储"
+    ],
+    "subcategory": "info"
+  },
+  {
+    "name": "du",
+    "category": "system",
+    "title": "文件夹和文件大小",
+    "what": "显示文件和文件夹占用的空间。",
+    "when": "需要找出什么占用了最多空间时。",
+    "when_not": "要看磁盘总空间 — 使用 df。",
+    "examples": [
+      {
+        "cmd": "du -sh *",
+        "desc": "当前文件夹中每项的大小"
+      },
+      {
+        "cmd": "du -sh ~/Downloads",
+        "desc": "Downloads 文件夹大小"
+      }
+    ],
+    "danger": false,
+    "related": [
+      "df",
+      "ls"
+    ],
+    "tags": [
+      "大小",
+      "空间",
+      "文件夹"
+    ],
+    "subcategory": "info"
+  },
+  {
+    "name": "curl",
+    "category": "network",
+    "title": "通过网络下载或发送数据",
+    "what": "处理 URL：下载页面、文件，发送 API 请求。",
+    "when": "检查网站、下载文件、测试 API。",
+    "when_not": "要交互式浏览网站 — 打开浏览器或使用 open。",
+    "examples": [
+      {
+        "cmd": "curl https://example.com",
+        "desc": "下载页面 HTML"
+      },
+      {
+        "cmd": "curl -O https://example.com/file.zip",
+        "desc": "下载文件"
+      },
+      {
+        "cmd": "curl -I https://example.com",
+        "desc": "仅显示响应头"
+      }
+    ],
+    "danger": false,
+    "related": [
+      "ping",
+      "wget"
+    ],
+    "tags": [
+      "下载",
+      "网络",
+      "url",
+      "api",
+      "http"
+    ],
+    "subcategory": "remote"
+  },
+  {
+    "name": "ping",
+    "category": "network",
+    "title": "检查主机是否可达",
+    "what": "向服务器发送数据包并显示是否收到响应。",
+    "when": "需要检查网络或网站/服务器是否可达时。",
+    "when_not": "不能诊断所有网络问题 — 仅做基本连通性检查。",
+    "examples": [
+      {
+        "cmd": "ping google.com",
+        "desc": "检查连通性（Ctrl+C — 停止）"
+      },
+      {
+        "cmd": "ping -c 4 8.8.8.8",
+        "desc": "恰好发送 4 个数据包"
+      }
+    ],
+    "danger": false,
+    "related": [
+      "curl",
+      "ssh"
+    ],
+    "tags": [
+      "网络",
+      "互联网",
+      "检查"
+    ],
+    "subcategory": "remote"
+  },
+  {
+    "name": "ssh",
+    "category": "network",
+    "title": "连接远程服务器",
+    "what": "通过终端与另一台计算机建立安全连接。",
+    "when": "在远程服务器、VPS 或局域网中的另一台 Mac 上工作时。",
+    "when_not": "不登录服务器就下载文件 — 使用 scp 或 curl。",
+    "examples": [
+      {
+        "cmd": "ssh user@server.com",
+        "desc": "连接到服务器"
+      },
+      {
+        "cmd": "ssh -i ~/.ssh/key.pem user@host",
+        "desc": "使用密钥连接"
+      }
+    ],
+    "danger": false,
+    "related": [
+      "scp",
+      "ping"
+    ],
+    "tags": [
+      "服务器",
+      "远程",
+      "连接"
+    ],
+    "subcategory": "remote"
+  },
+  {
+    "name": "brew",
+    "category": "packages",
+    "title": "在 macOS 上安装程序",
+    "what": "Homebrew 包管理器 — 一条命令安装 CLI 程序。",
+    "when": "需要 macOS 默认没有的工具（fzf、git、node...）时。",
+    "when_not": "GUI 应用 — 使用 brew install --cask 或 App Store。",
+    "examples": [
+      {
+        "cmd": "brew install fzf",
+        "desc": "安装 fzf"
+      },
+      {
+        "cmd": "brew search docker",
+        "desc": "按名称搜索包"
+      },
+      {
+        "cmd": "brew list",
+        "desc": "查看已安装的包"
+      },
+      {
+        "cmd": "brew update && brew upgrade",
+        "desc": "更新 brew 和所有包"
+      }
+    ],
+    "danger": false,
+    "related": [
+      "which"
+    ],
+    "tags": [
+      "安装",
+      "包",
+      "homebrew",
+      "程序"
+    ],
+    "subcategory": "install"
+  },
+  {
+    "name": "git",
+    "category": "git",
+    "title": "版本控制系统",
+    "what": "跟踪项目文件的变更。可以保存历史、回滚、团队协作。",
+    "when": "任何需要变更历史的代码或项目。",
+    "when_not": "不是用来复制文件 — 那是 cp。Git 管的是版本和历史。",
+    "examples": [
+      {
+        "cmd": "git status",
+        "desc": "项目有哪些变更"
+      },
+      {
+        "cmd": "git add .",
+        "desc": "将所有变更加入提交"
+      },
+      {
+        "cmd": "git commit -m 'описание'",
+        "desc": "保存变更快照"
+      },
+      {
+        "cmd": "git push",
+        "desc": "推送到 GitHub/GitLab"
+      },
+      {
+        "cmd": "git pull",
+        "desc": "从服务器拉取变更"
+      },
+      {
+        "cmd": "git log --oneline",
+        "desc": "简要提交历史"
+      },
+      {
+        "cmd": "git clone url",
+        "desc": "从服务器克隆仓库"
+      }
+    ],
+    "danger": false,
+    "related": [
+      "brew"
+    ],
+    "tags": [
+      "git",
+      "版本",
+      "代码",
+      "github",
+      "提交"
+    ],
+    "subcategory": "basics"
+  },
+  {
+    "name": "ps",
+    "category": "processes",
+    "title": "运行中的进程列表",
+    "what": "显示当前正在运行的程序和进程。",
+    "when": "需要查看运行了什么，或查找进程的 PID 以便 kill。",
+    "when_not": "要交互式监控 — 使用 top 或 htop。",
+    "examples": [
+      {
+        "cmd": "ps aux",
+        "desc": "所有进程及详细信息"
+      },
+      {
+        "cmd": "ps aux | grep python",
+        "desc": "查找 python 进程"
+      }
+    ],
+    "danger": false,
+    "related": [
+      "top",
+      "kill"
+    ],
+    "tags": [
+      "进程",
+      "程序",
+      "运行"
+    ],
+    "subcategory": "manage"
+  },
+  {
+    "name": "kill",
+    "category": "processes",
+    "title": "停止进程",
+    "what": "按 PID（进程号）终止进程。",
+    "when": "程序卡死无法正常关闭时。",
+    "when_not": "先用 ps 找到 PID。不清楚是什么进程时不要终止。",
+    "examples": [
+      {
+        "cmd": "kill 1234",
+        "desc": "温和地终止 PID 为 1234 的进程"
+      },
+      {
+        "cmd": "kill -9 1234",
+        "desc": "强制终止（普通 kill 无效时）"
+      }
+    ],
+    "danger": true,
+    "danger_note": "kill -9 无法被拦截 — 进程会立即结束。仅在普通 kill 无效时使用。",
+    "related": [
+      "ps",
+      "top"
+    ],
+    "tags": [
+      "进程",
+      "停止",
+      "终止"
+    ],
+    "subcategory": "manage"
+  },
+  {
+    "name": "top",
+    "category": "processes",
+    "title": "实时进程监控",
+    "what": "显示进程实时列表：CPU、内存、各进程占用情况。",
+    "when": "电脑变慢，需要找出占用资源的程序时。",
+    "when_not": "只需一次性列表 — ps 就够了。",
+    "examples": [
+      {
+        "cmd": "top",
+        "desc": "打开监控（q — 退出）"
+      }
+    ],
+    "danger": false,
+    "related": [
+      "ps",
+      "kill"
+    ],
+    "tags": [
+      "进程",
+      "cpu",
+      "内存",
+      "监控"
+    ],
+    "subcategory": "manage"
+  }
+]

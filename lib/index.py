@@ -34,8 +34,8 @@ def _parse_apropos(output):
     return entries
 
 
-def _zsh_list(flag):
-    script = f"print -l ${{{flag}commands}}"
+def _zsh_list(array_name):
+    script = f"print -l ${{(k){array_name}}}"
     return [line.strip() for line in _run(["zsh", "-c", script]).splitlines() if line.strip()]
 
 
@@ -43,12 +43,12 @@ def build_index():
     ensure_user_dir()
     entries = _parse_apropos(_run(["apropos", "-s", "1", "."]))
 
-    for name in _zsh_list("o)k"):
+    for name in _zsh_list("commands"):
         if name not in entries:
             entries[name] = {"name": name, "man_desc": None, "source": "path"}
         entries[name]["available"] = True
 
-    for name in _zsh_list("ok"):
+    for name in _zsh_list("builtins"):
         if name not in entries:
             entries[name] = {"name": name, "man_desc": None, "source": "builtin"}
         entries[name]["builtin"] = True

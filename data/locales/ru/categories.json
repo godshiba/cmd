@@ -1,0 +1,13 @@
+{
+  "navigation": {"title": "Навигация", "order": 1, "subs": {"basics": {"title": "Перемещение", "order": 1}, "view": {"title": "Просмотр", "order": 2}}},
+  "files": {"title": "Файлы", "order": 2, "subs": {"manage": {"title": "Создание и изменение", "order": 1}, "view": {"title": "Чтение и просмотр", "order": 2}}},
+  "search": {"title": "Поиск", "order": 3, "subs": {"find": {"title": "Поиск файлов и текста", "order": 1}}},
+  "system": {"title": "Система", "order": 4, "subs": {"info": {"title": "Информация", "order": 1}, "config": {"title": "Настройка", "order": 2}}},
+  "network": {"title": "Сеть", "order": 5, "subs": {"remote": {"title": "Подключения", "order": 1}}},
+  "packages": {"title": "Пакеты", "order": 6, "subs": {"install": {"title": "Установка", "order": 1}}},
+  "git": {"title": "Git", "order": 7, "subs": {"basics": {"title": "Основы", "order": 1}}},
+  "processes": {"title": "Процессы", "order": 8, "subs": {"manage": {"title": "Управление", "order": 1}}},
+  "text": {"title": "Текст", "order": 9, "subs": {"process": {"title": "Обработка", "order": 1}}},
+  "archive": {"title": "Архивы", "order": 10, "subs": {"compress": {"title": "Сжатие", "order": 1}}},
+  "dev": {"title": "Разработка", "order": 11, "subs": {"tools": {"title": "Инструменты", "order": 1}}}
+}

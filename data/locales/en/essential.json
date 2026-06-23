@@ -1,0 +1,968 @@
+[
+  {
+    "name": "pwd",
+    "category": "navigation",
+    "title": "Where am I",
+    "what": "Shows the full path to the current folder (working directory).",
+    "when": "When you're lost in the file system and need to know which folder you're in.",
+    "when_not": "To go to another folder — use cd.",
+    "examples": [
+      {
+        "cmd": "pwd",
+        "desc": "Show current path"
+      }
+    ],
+    "danger": false,
+    "related": [
+      "cd",
+      "ls"
+    ],
+    "tags": [
+      "path",
+      "folder",
+      "where",
+      "navigation"
+    ],
+    "subcategory": "basics"
+  },
+  {
+    "name": "cd",
+    "category": "navigation",
+    "title": "Go to a folder",
+    "what": "Changes the current working directory — \"moves\" you into another folder.",
+    "when": "When you need to enter another folder to work with files there.",
+    "when_not": "To copy files between folders — use cp.",
+    "examples": [
+      {
+        "cmd": "cd Documents",
+        "desc": "Go into the Documents folder"
+      },
+      {
+        "cmd": "cd ..",
+        "desc": "Go up one level"
+      },
+      {
+        "cmd": "cd ~",
+        "desc": "Go to home folder"
+      },
+      {
+        "cmd": "cd -",
+        "desc": "Return to the previous folder"
+      }
+    ],
+    "danger": false,
+    "related": [
+      "pwd",
+      "ls"
+    ],
+    "tags": [
+      "folder",
+      "go",
+      "navigation"
+    ],
+    "subcategory": "basics"
+  },
+  {
+    "name": "ls",
+    "category": "navigation",
+    "title": "List folder contents",
+    "what": "Lists files and folders in the current (or specified) directory.",
+    "when": "When you need to see what's in a folder.",
+    "when_not": "To read a file's contents — use cat or less.",
+    "examples": [
+      {
+        "cmd": "ls",
+        "desc": "Basic listing"
+      },
+      {
+        "cmd": "ls -la",
+        "desc": "All files, including hidden, with permissions"
+      },
+      {
+        "cmd": "ls ~/Downloads",
+        "desc": "List files in a specific folder"
+      }
+    ],
+    "danger": false,
+    "related": [
+      "cd",
+      "pwd",
+      "cat"
+    ],
+    "tags": [
+      "files",
+      "folder",
+      "list",
+      "view"
+    ],
+    "subcategory": "view"
+  },
+  {
+    "name": "clear",
+    "category": "navigation",
+    "title": "Clear the terminal screen",
+    "what": "Removes all text from the terminal screen for convenience.",
+    "when": "When the screen is cluttered and you want a fresh start.",
+    "when_not": "Does not delete command history — it's still there, just not visible.",
+    "examples": [
+      {
+        "cmd": "clear",
+        "desc": "Clear the screen"
+      }
+    ],
+    "danger": false,
+    "related": [
+      "history"
+    ],
+    "tags": [
+      "screen",
+      "clear"
+    ],
+    "subcategory": "view"
+  },
+  {
+    "name": "open",
+    "category": "navigation",
+    "title": "Open a file or folder in macOS",
+    "what": "Opens a file or folder in the default app (Finder, browser, etc.).",
+    "when": "When you need to open a file visually, not through the terminal.",
+    "when_not": "To read file text in the terminal — use cat or less.",
+    "examples": [
+      {
+        "cmd": "open .",
+        "desc": "Open current folder in Finder"
+      },
+      {
+        "cmd": "open file.pdf",
+        "desc": "Open PDF in default app"
+      },
+      {
+        "cmd": "open https://example.com",
+        "desc": "Open link in browser"
+      }
+    ],
+    "danger": false,
+    "related": [
+      "ls",
+      "cat"
+    ],
+    "tags": [
+      "open",
+      "finder",
+      "macos"
+    ],
+    "subcategory": "view"
+  },
+  {
+    "name": "cp",
+    "category": "files",
+    "title": "Copy a file or folder",
+    "what": "Creates a copy of a file or folder in another location.",
+    "when": "When you need to copy a file without deleting the original.",
+    "when_not": "To move files — use mv.",
+    "examples": [
+      {
+        "cmd": "cp file.txt backup.txt",
+        "desc": "Copy a file"
+      },
+      {
+        "cmd": "cp -r folder/ backup/",
+        "desc": "Copy an entire folder"
+      }
+    ],
+    "danger": false,
+    "related": [
+      "mv",
+      "rm",
+      "mkdir"
+    ],
+    "tags": [
+      "copy",
+      "file",
+      "folder"
+    ],
+    "subcategory": "manage"
+  },
+  {
+    "name": "mv",
+    "category": "files",
+    "title": "Move or rename",
+    "what": "Moves a file/folder to another location or renames it.",
+    "when": "When you need to move a file or give it a new name.",
+    "when_not": "To copy while keeping the original — use cp.",
+    "examples": [
+      {
+        "cmd": "mv old.txt new.txt",
+        "desc": "Rename a file"
+      },
+      {
+        "cmd": "mv file.txt ~/Documents/",
+        "desc": "Move to another folder"
+      }
+    ],
+    "danger": false,
+    "related": [
+      "cp",
+      "rm"
+    ],
+    "tags": [
+      "move",
+      "rename",
+      "file"
+    ],
+    "subcategory": "manage"
+  },
+  {
+    "name": "rm",
+    "category": "files",
+    "title": "Delete a file or folder",
+    "what": "Permanently deletes files and folders. There is no Trash in the terminal!",
+    "when": "When you're sure the file is no longer needed.",
+    "when_not": "If in doubt — don't delete. A mistake with rm -rf can destroy important data.",
+    "examples": [
+      {
+        "cmd": "rm file.txt",
+        "desc": "Delete a single file"
+      },
+      {
+        "cmd": "rm -r folder/",
+        "desc": "Delete a folder and everything inside"
+      }
+    ],
+    "danger": true,
+    "danger_note": "rm -rf deletes without confirmation and without Trash. Double-check the path!",
+    "related": [
+      "cp",
+      "mv",
+      "mkdir"
+    ],
+    "tags": [
+      "delete",
+      "file",
+      "dangerous"
+    ],
+    "subcategory": "manage"
+  },
+  {
+    "name": "mkdir",
+    "category": "files",
+    "title": "Create a folder",
+    "what": "Creates a new directory (folder) with the specified name.",
+    "when": "When you need to organize files in a new folder.",
+    "when_not": "To create an empty file — use touch.",
+    "examples": [
+      {
+        "cmd": "mkdir projects",
+        "desc": "Create a projects folder"
+      },
+      {
+        "cmd": "mkdir -p a/b/c",
+        "desc": "Create nested folders at once"
+      }
+    ],
+    "danger": false,
+    "related": [
+      "touch",
+      "cd",
+      "ls"
+    ],
+    "tags": [
+      "create",
+      "folder",
+      "directory"
+    ],
+    "subcategory": "manage"
+  },
+  {
+    "name": "touch",
+    "category": "files",
+    "title": "Create an empty file",
+    "what": "Creates a new empty file or updates the modification time of an existing one.",
+    "when": "When you need to quickly create an empty file.",
+    "when_not": "To create a folder — use mkdir.",
+    "examples": [
+      {
+        "cmd": "touch notes.txt",
+        "desc": "Create an empty notes.txt file"
+      },
+      {
+        "cmd": "touch a.txt b.txt",
+        "desc": "Create multiple files"
+      }
+    ],
+    "danger": false,
+    "related": [
+      "mkdir",
+      "cat"
+    ],
+    "tags": [
+      "create",
+      "file"
+    ],
+    "subcategory": "manage"
+  },
+  {
+    "name": "cat",
+    "category": "files",
+    "title": "Show file contents",
+    "what": "Prints the entire text of a file to the terminal.",
+    "when": "For small text files — configs, scripts, notes.",
+    "when_not": "For large files — use less, otherwise the screen will fill with text.",
+    "examples": [
+      {
+        "cmd": "cat file.txt",
+        "desc": "Show file contents"
+      },
+      {
+        "cmd": "cat a.txt b.txt",
+        "desc": "Show multiple files in sequence"
+      }
+    ],
+    "danger": false,
+    "related": [
+      "less",
+      "head",
+      "tail"
+    ],
+    "tags": [
+      "read",
+      "file",
+      "text",
+      "view"
+    ],
+    "subcategory": "view"
+  },
+  {
+    "name": "less",
+    "category": "files",
+    "title": "View a file with scrolling",
+    "what": "Opens a file for paginated viewing. You can scroll up and down.",
+    "when": "For large files — logs, long texts.",
+    "when_not": "For small files, cat is enough.",
+    "examples": [
+      {
+        "cmd": "less file.log",
+        "desc": "Open file (q — quit, / — search)"
+      }
+    ],
+    "danger": false,
+    "related": [
+      "cat",
+      "head",
+      "tail"
+    ],
+    "tags": [
+      "read",
+      "file",
+      "view",
+      "log"
+    ],
+    "subcategory": "view"
+  },
+  {
+    "name": "head",
+    "category": "files",
+    "title": "First lines of a file",
+    "what": "Shows the beginning of a file (10 lines by default).",
+    "when": "When you need a quick look at the start — CSV headers, beginning of a log.",
+    "when_not": "For the end of a file — use tail.",
+    "examples": [
+      {
+        "cmd": "head file.txt",
+        "desc": "First 10 lines"
+      },
+      {
+        "cmd": "head -n 20 file.txt",
+        "desc": "First 20 lines"
+      }
+    ],
+    "danger": false,
+    "related": [
+      "tail",
+      "cat"
+    ],
+    "tags": [
+      "file",
+      "beginning",
+      "lines"
+    ],
+    "subcategory": "view"
+  },
+  {
+    "name": "tail",
+    "category": "files",
+    "title": "Last lines of a file",
+    "what": "Shows the end of a file (10 lines by default).",
+    "when": "For logs — view recent entries. tail -f watches a file in real time.",
+    "when_not": "For the beginning of a file — use head.",
+    "examples": [
+      {
+        "cmd": "tail file.log",
+        "desc": "Last 10 lines"
+      },
+      {
+        "cmd": "tail -f file.log",
+        "desc": "Watch for new lines (Ctrl+C — quit)"
+      }
+    ],
+    "danger": false,
+    "related": [
+      "head",
+      "less"
+    ],
+    "tags": [
+      "file",
+      "end",
+      "log",
+      "lines"
+    ],
+    "subcategory": "view"
+  },
+  {
+    "name": "find",
+    "category": "search",
+    "title": "Find files by name or condition",
+    "what": "Recursively searches for files and folders in the specified directory.",
+    "when": "When you know part of a file name but not where it is.",
+    "when_not": "To search text inside files — use grep.",
+    "examples": [
+      {
+        "cmd": "find . -name '*.txt'",
+        "desc": "Find all .txt in current folder and below"
+      },
+      {
+        "cmd": "find ~/Downloads -name report*",
+        "desc": "Find files starting with report"
+      }
+    ],
+    "danger": false,
+    "related": [
+      "grep",
+      "ls"
+    ],
+    "tags": [
+      "find",
+      "search",
+      "file"
+    ],
+    "subcategory": "find"
+  },
+  {
+    "name": "grep",
+    "category": "search",
+    "title": "Find text inside files",
+    "what": "Searches for lines containing the specified text or pattern.",
+    "when": "When you need to find a word or phrase in files or command output.",
+    "when_not": "To search for files by name — use find.",
+    "examples": [
+      {
+        "cmd": "grep 'error' file.log",
+        "desc": "Find lines with 'error' in a file"
+      },
+      {
+        "cmd": "grep -r 'TODO' .",
+        "desc": "Find 'TODO' in all files in the folder"
+      },
+      {
+        "cmd": "ls -la | grep '.txt'",
+        "desc": "Filter output of another command"
+      }
+    ],
+    "danger": false,
+    "related": [
+      "find",
+      "cat"
+    ],
+    "tags": [
+      "find",
+      "search",
+      "text",
+      "filter"
+    ],
+    "subcategory": "find"
+  },
+  {
+    "name": "which",
+    "category": "search",
+    "title": "Where a command is located",
+    "what": "Shows the full path to a command's executable file.",
+    "when": "When you need to know which program will run when you type a command.",
+    "when_not": "To search for files — use find.",
+    "examples": [
+      {
+        "cmd": "which python3",
+        "desc": "Where python3 is installed"
+      },
+      {
+        "cmd": "which git",
+        "desc": "Where git is installed"
+      }
+    ],
+    "danger": false,
+    "related": [
+      "where",
+      "brew"
+    ],
+    "tags": [
+      "path",
+      "command",
+      "where"
+    ],
+    "subcategory": "find"
+  },
+  {
+    "name": "where",
+    "category": "search",
+    "title": "All locations of a command",
+    "what": "Shows all paths where a command is found (in zsh — equivalent to which -a).",
+    "when": "When which shows one location but you suspect there are multiple versions.",
+    "when_not": "Usually which is enough.",
+    "examples": [
+      {
+        "cmd": "where python3",
+        "desc": "All installed python3"
+      }
+    ],
+    "danger": false,
+    "related": [
+      "which"
+    ],
+    "tags": [
+      "path",
+      "command"
+    ],
+    "subcategory": "find"
+  },
+  {
+    "name": "man",
+    "category": "system",
+    "title": "Full command documentation",
+    "what": "Opens the official manual for a command. Detailed, but in English.",
+    "when": "When you need all flags and details not covered in cmd.",
+    "when_not": "For a quick start — use cmd first, man for deeper reference.",
+    "examples": [
+      {
+        "cmd": "man ls",
+        "desc": "Help for ls (q — quit, / — search)"
+      },
+      {
+        "cmd": "man grep",
+        "desc": "Help for grep"
+      }
+    ],
+    "danger": false,
+    "related": [
+      "cmd"
+    ],
+    "tags": [
+      "help",
+      "documentation",
+      "manual"
+    ],
+    "subcategory": "info"
+  },
+  {
+    "name": "history",
+    "category": "system",
+    "title": "History of entered commands",
+    "what": "Shows a list of commands you've already entered in this terminal.",
+    "when": "When you forgot what you typed earlier or want to repeat a command.",
+    "when_not": "For command reference — use cmd.",
+    "examples": [
+      {
+        "cmd": "history",
+        "desc": "Show full history"
+      },
+      {
+        "cmd": "history | grep git",
+        "desc": "Find git commands in history"
+      }
+    ],
+    "danger": false,
+    "related": [
+      "clear"
+    ],
+    "tags": [
+      "history",
+      "commands",
+      "repeat"
+    ],
+    "subcategory": "info"
+  },
+  {
+    "name": "echo",
+    "category": "system",
+    "title": "Print text to the terminal",
+    "what": "Prints the specified text or variable value.",
+    "when": "To check variables, output in scripts, simple messages.",
+    "when_not": "Not for reading files — use cat.",
+    "examples": [
+      {
+        "cmd": "echo Hello",
+        "desc": "Print text"
+      },
+      {
+        "cmd": "echo $PATH",
+        "desc": "Show PATH variable value"
+      }
+    ],
+    "danger": false,
+    "related": [
+      "cat"
+    ],
+    "tags": [
+      "output",
+      "text",
+      "print"
+    ],
+    "subcategory": "config"
+  },
+  {
+    "name": "chmod",
+    "category": "system",
+    "title": "Change file permissions",
+    "what": "Changes permissions: who can read, write, and execute a file.",
+    "when": "When a script won't run — it may lack execute permission.",
+    "when_not": "Be careful with chmod 777 — it grants full access to everyone.",
+    "examples": [
+      {
+        "cmd": "chmod +x script.sh",
+        "desc": "Allow script execution"
+      },
+      {
+        "cmd": "ls -la",
+        "desc": "First check current permissions (first column)"
+      }
+    ],
+    "danger": true,
+    "danger_note": "Wrong permissions can make a file inaccessible or insecure.",
+    "related": [
+      "ls",
+      "chown"
+    ],
+    "tags": [
+      "permissions",
+      "access",
+      "rights"
+    ],
+    "subcategory": "config"
+  },
+  {
+    "name": "df",
+    "category": "system",
+    "title": "Free disk space",
+    "what": "Shows how much space is used and free on disks.",
+    "when": "When a disk is filling up or you need to check available space.",
+    "when_not": "For the size of a specific folder — use du.",
+    "examples": [
+      {
+        "cmd": "df -h",
+        "desc": "Disk space in human-readable format (GB, MB)"
+      }
+    ],
+    "danger": false,
+    "related": [
+      "du"
+    ],
+    "tags": [
+      "disk",
+      "space",
+      "storage"
+    ],
+    "subcategory": "info"
+  },
+  {
+    "name": "du",
+    "category": "system",
+    "title": "Folder and file sizes",
+    "what": "Shows how much space files and folders take up.",
+    "when": "When you need to find what's using the most space.",
+    "when_not": "For overall disk space — use df.",
+    "examples": [
+      {
+        "cmd": "du -sh *",
+        "desc": "Size of each item in current folder"
+      },
+      {
+        "cmd": "du -sh ~/Downloads",
+        "desc": "Size of Downloads folder"
+      }
+    ],
+    "danger": false,
+    "related": [
+      "df",
+      "ls"
+    ],
+    "tags": [
+      "size",
+      "space",
+      "folder"
+    ],
+    "subcategory": "info"
+  },
+  {
+    "name": "curl",
+    "category": "network",
+    "title": "Download or send data over the network",
+    "what": "Works with URLs: downloads pages, files, sends API requests.",
+    "when": "To check a site, download a file, test an API.",
+    "when_not": "For interactive browsing — open a browser or use open.",
+    "examples": [
+      {
+        "cmd": "curl https://example.com",
+        "desc": "Download page HTML"
+      },
+      {
+        "cmd": "curl -O https://example.com/file.zip",
+        "desc": "Download a file"
+      },
+      {
+        "cmd": "curl -I https://example.com",
+        "desc": "Response headers only"
+      }
+    ],
+    "danger": false,
+    "related": [
+      "ping",
+      "wget"
+    ],
+    "tags": [
+      "download",
+      "network",
+      "url",
+      "api",
+      "http"
+    ],
+    "subcategory": "remote"
+  },
+  {
+    "name": "ping",
+    "category": "network",
+    "title": "Check host availability",
+    "what": "Sends packets to a server and shows whether it responds.",
+    "when": "When you need to check internet or site/server availability.",
+    "when_not": "Does not diagnose all network issues — only basic connectivity check.",
+    "examples": [
+      {
+        "cmd": "ping google.com",
+        "desc": "Check connectivity (Ctrl+C — stop)"
+      },
+      {
+        "cmd": "ping -c 4 8.8.8.8",
+        "desc": "Send exactly 4 packets"
+      }
+    ],
+    "danger": false,
+    "related": [
+      "curl",
+      "ssh"
+    ],
+    "tags": [
+      "network",
+      "internet",
+      "check"
+    ],
+    "subcategory": "remote"
+  },
+  {
+    "name": "ssh",
+    "category": "network",
+    "title": "Connect to a remote server",
+    "what": "Opens a secure connection to another computer through the terminal.",
+    "when": "To work on a remote server, VPS, or another Mac on the network.",
+    "when_not": "To download files without logging in — use scp or curl.",
+    "examples": [
+      {
+        "cmd": "ssh user@server.com",
+        "desc": "Connect to server"
+      },
+      {
+        "cmd": "ssh -i ~/.ssh/key.pem user@host",
+        "desc": "Connect with a key"
+      }
+    ],
+    "danger": false,
+    "related": [
+      "scp",
+      "ping"
+    ],
+    "tags": [
+      "server",
+      "remote",
+      "connect"
+    ],
+    "subcategory": "remote"
+  },
+  {
+    "name": "brew",
+    "category": "packages",
+    "title": "Install programs on macOS",
+    "what": "Homebrew package manager — installs CLI programs with one command.",
+    "when": "When you need a program not included in macOS by default (fzf, git, node...).",
+    "when_not": "For GUI apps — brew install --cask or App Store.",
+    "examples": [
+      {
+        "cmd": "brew install fzf",
+        "desc": "Install fzf"
+      },
+      {
+        "cmd": "brew search docker",
+        "desc": "Search packages by name"
+      },
+      {
+        "cmd": "brew list",
+        "desc": "What's already installed"
+      },
+      {
+        "cmd": "brew update && brew upgrade",
+        "desc": "Update brew and all packages"
+      }
+    ],
+    "danger": false,
+    "related": [
+      "which"
+    ],
+    "tags": [
+      "install",
+      "package",
+      "homebrew",
+      "program"
+    ],
+    "subcategory": "install"
+  },
+  {
+    "name": "git",
+    "category": "git",
+    "title": "Version control system",
+    "what": "Tracks changes in project files. Lets you save history, roll back, and work in a team.",
+    "when": "For any code or project where change history matters.",
+    "when_not": "Not for copying files — that's cp. Git is about versions and history.",
+    "examples": [
+      {
+        "cmd": "git status",
+        "desc": "What changed in the project"
+      },
+      {
+        "cmd": "git add .",
+        "desc": "Stage all changes for commit"
+      },
+      {
+        "cmd": "git commit -m 'описание'",
+        "desc": "Save a snapshot of changes"
+      },
+      {
+        "cmd": "git push",
+        "desc": "Push to GitHub/GitLab"
+      },
+      {
+        "cmd": "git pull",
+        "desc": "Pull changes from server"
+      },
+      {
+        "cmd": "git log --oneline",
+        "desc": "Brief commit history"
+      },
+      {
+        "cmd": "git clone url",
+        "desc": "Clone a repository from server"
+      }
+    ],
+    "danger": false,
+    "related": [
+      "brew"
+    ],
+    "tags": [
+      "git",
+      "versions",
+      "code",
+      "github",
+      "commit"
+    ],
+    "subcategory": "basics"
+  },
+  {
+    "name": "ps",
+    "category": "processes",
+    "title": "List running processes",
+    "what": "Shows programs and processes currently running.",
+    "when": "When you need to see what's running or find a process PID for kill.",
+    "when_not": "For interactive monitoring — use top or htop.",
+    "examples": [
+      {
+        "cmd": "ps aux",
+        "desc": "All processes with details"
+      },
+      {
+        "cmd": "ps aux | grep python",
+        "desc": "Find python processes"
+      }
+    ],
+    "danger": false,
+    "related": [
+      "top",
+      "kill"
+    ],
+    "tags": [
+      "process",
+      "program",
+      "running"
+    ],
+    "subcategory": "manage"
+  },
+  {
+    "name": "kill",
+    "category": "processes",
+    "title": "Stop a process",
+    "what": "Terminates a process by its PID (process ID).",
+    "when": "When a program is frozen and won't close normally.",
+    "when_not": "Find the PID with ps first. Don't kill processes if you don't know what they are.",
+    "examples": [
+      {
+        "cmd": "kill 1234",
+        "desc": "Gracefully terminate process with PID 1234"
+      },
+      {
+        "cmd": "kill -9 1234",
+        "desc": "Force kill (if regular kill doesn't work)"
+      }
+    ],
+    "danger": true,
+    "danger_note": "kill -9 cannot be intercepted — the process dies immediately. Use only if regular kill doesn't help.",
+    "related": [
+      "ps",
+      "top"
+    ],
+    "tags": [
+      "process",
+      "stop",
+      "terminate"
+    ],
+    "subcategory": "manage"
+  },
+  {
+    "name": "top",
+    "category": "processes",
+    "title": "Real-time process monitoring",
+    "what": "Shows a live list of processes: CPU, memory, who's using how much.",
+    "when": "When the computer is slow and you need to find the culprit.",
+    "when_not": "For a one-time list — ps is enough.",
+    "examples": [
+      {
+        "cmd": "top",
+        "desc": "Open monitor (q — quit)"
+      }
+    ],
+    "danger": false,
+    "related": [
+      "ps",
+      "kill"
+    ],
+    "tags": [
+      "process",
+      "cpu",
+      "memory",
+      "monitoring"
+    ],
+    "subcategory": "manage"
+  }
+]

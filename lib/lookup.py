@@ -3,16 +3,18 @@ import os
 import re
 import subprocess
 
-from .paths import (
-    CATEGORIES_PATH,
-    CUSTOM_PATH,
-    DATA_DIR,
-    ESSENTIAL_PATH,
-    INDEX_PATH,
-)
+from .i18n import get_locale, t
+from .paths import CUSTOM_PATH, DATA_DIR, INDEX_PATH, locale_data_path
 from .index import load_index
 
 TIER_ORDER = {"essential": 0, "recent": 1, "useful": 2, "system": 3}
+
+_useful_cache = {"locale": None, "items": None, "by_name": None}
+
+
+def clear_caches():
+    global _useful_cache
+    _useful_cache = {"locale": None, "items": None, "by_name": None}
 
 
 def _load_json(path, default=None):
@@ -25,11 +27,11 @@ def _load_json(path, default=None):
 
 
 def load_categories():
-    return _load_json(CATEGORIES_PATH)
+    return _load_json(locale_data_path("categories.json", get_locale()))
 
 
 def load_essential():
-    return _load_json(ESSENTIAL_PATH, default=[])
+    return _load_json(locale_data_path("essential.json", get_locale()), default=[])
 
 
 def load_custom():
@@ -38,8 +40,24 @@ def load_custom():
 
 
 def load_useful_system():
-    path = os.path.join(DATA_DIR, "useful_system.json")
-    return _load_json(path, default=[])
+    locale = get_locale()
+    if _useful_cache["locale"] == locale and _useful_cache["items"] is not None:
+        return _useful_cache["items"]
+
+    path = locale_data_path("useful_system.json", locale)
+    items = _load_json(path, default=[])
+    if not items:
+        items = _load_json(os.path.join(DATA_DIR, "useful_system.json"), default=[])
+
+    _useful_cache["locale"] = locale
+    _useful_cache["items"] = items
+    _useful_cache["by_name"] = {u["name"].lower(): u for u in items}
+    return items
+
+
+def get_useful(name):
+    load_useful_system()
+    return _useful_cache["by_name"].get(name.lower())
 
 
 def _meta(category_id, subcategory_id=""):
@@ -103,26 +121,22 @@ def resolve(name):
     if card:
         return card
 
-    useful = next(
-        (u for u in load_useful_system() if u["name"].lower() == name.lower()),
-        None,
-    )
+    useful = get_useful(name)
     if useful:
         entry = system_entry(name)
         desc = (
-            (entry or {}).get("man_desc")
-            or useful.get("title")
-            or whatis(name)
-            or "Системная команда"
+            useful.get("title")
+            or (entry or {}).get("man_desc")
+            or t("resolve.system_cmd")
         )
         meta = _meta(useful.get("category", "system"), useful.get("subcategory", ""))
         return {
             "name": useful["name"],
             "title": useful.get("title", useful["name"]),
             "what": desc,
-            "when": f"Полезная команда macOS. Подробности: man {useful['name']}",
+            "when": t("resolve.useful_when", name=useful["name"]),
             "when_not": None,
-            "examples": [{"cmd": f"man {useful['name']}", "desc": "Полная документация"}],
+            "examples": [{"cmd": f"man {useful['name']}", "desc": t("resolve.man_desc")}],
             "danger": False,
             "related": [],
             "tags": [],
@@ -136,10 +150,10 @@ def resolve(name):
         return {
             "name": entry["name"],
             "title": entry.get("man_desc") or entry["name"],
-            "what": entry.get("man_desc") or whatis(entry["name"]) or "Описание недоступно",
-            "when": f"Системная команда macOS. Подробности: man {entry['name']}",
+            "what": entry.get("man_desc") or whatis(entry["name"]) or t("resolve.unavailable"),
+            "when": t("resolve.system_when", name=entry["name"]),
             "when_not": None,
-            "examples": [{"cmd": f"man {entry['name']}", "desc": "Полная документация"}],
+            "examples": [{"cmd": f"man {entry['name']}", "desc": t("resolve.man_desc")}],
             "danger": False,
             "related": [],
             "tags": [],
@@ -155,9 +169,9 @@ def resolve(name):
             "name": name,
             "title": name,
             "what": desc,
-            "when": f"Подробности: man {name}",
+            "when": t("resolve.details", name=name),
             "when_not": None,
-            "examples": [{"cmd": f"man {name}", "desc": "Полная документация"}],
+            "examples": [{"cmd": f"man {name}", "desc": t("resolve.man_desc")}],
             "danger": False,
             "related": [],
             "tags": [],
@@ -181,6 +195,10 @@ def related_cards(name, limit=8):
 
 def _matches(card, query):
     q = query.lower()
+    example_text = " ".join(
+        f"{ex.get('cmd', '')} {ex.get('desc', '')}"
+        for ex in card.get("examples", [])
+    )
     fields = [
         card.get("name", ""),
         card.get("title", ""),
@@ -189,6 +207,7 @@ def _matches(card, query):
         card.get("category_title", ""),
         card.get("subcategory_title", ""),
         " ".join(card.get("tags", [])),
+        example_text,
     ]
     return q in " ".join(fields).lower()
 
@@ -310,20 +329,19 @@ def browser_entries(recent_names, show_all=False):
     for name in recent_names:
         if card := get_card(name):
             add(card, "recent")
-        elif resolve(name):
-            add(resolve(name), "recent")
+        elif card := resolve(name):
+            add(card, "recent")
 
     for useful in load_useful_system():
         if useful["name"].lower() in seen:
             continue
-        entry = system_entry(useful["name"])
         meta = _meta(useful.get("category", "system"), useful.get("subcategory", ""))
-        desc = (entry or {}).get("man_desc") or useful.get("title") or useful["name"]
+        title = useful.get("title") or useful["name"]
         add(
             {
                 "name": useful["name"],
-                "title": useful.get("title", desc),
-                "what": desc,
+                "title": title,
+                "what": title,
                 **meta,
             },
             "useful",

@@ -1,23 +1,12 @@
-TIER_LABELS = {
-    "essential": "Основные",
-    "recent": "Недавние",
-    "useful": "Полезные",
-    "system": "Система",
-}
-
-TIER_ICONS = {
-    "essential": "⭐",
-    "recent": "🕐",
-    "useful": "✦",
-    "system": "💻",
-}
+from .i18n import t, tier_icons, tier_labels
 
 
 def format_card(card, compact=False):
     lines = []
     tier = card.get("tier", "essential")
-    icon = TIER_ICONS.get(tier, "")
-    tier_label = TIER_LABELS.get(tier, tier)
+    icon = tier_icons().get(tier, "")
+    tiers = tier_labels()
+    tier_label = tiers.get(tier, tier)
 
     lines.append("=" * 50)
     lines.append(f"{icon} {card['name']} — {card.get('title', '')}")
@@ -30,33 +19,33 @@ def format_card(card, compact=False):
     lines.append("=" * 50)
 
     if card.get("what"):
-        lines.append(f"\nЧто делает:\n  {card['what']}")
+        lines.append(f"\n{t('card.what')}:\n  {card['what']}")
     if card.get("when"):
-        lines.append(f"\nЗачем нужна:\n  {card['when']}")
+        lines.append(f"\n{t('card.when')}:\n  {card['when']}")
     if card.get("when_not"):
-        lines.append(f"\nКогда НЕ нужна:\n  {card['when_not']}")
+        lines.append(f"\n{t('card.when_not')}:\n  {card['when_not']}")
 
     examples = card.get("examples", [])
     if examples:
-        lines.append("\nПримеры:")
+        lines.append(f"\n{t('card.examples')}:")
         for i, ex in enumerate(examples, 1):
             lines.append(f"  [{i}] $ {ex['cmd']}")
             if ex.get("desc"):
                 lines.append(f"      → {ex['desc']}")
         if not compact:
-            lines.append("\n  cmd --pick-example " + card["name"] + "  — выбрать пример")
+            lines.append(t("card.pick_example", name=card["name"]))
 
     if card.get("danger"):
-        note = card.get("danger_note", "Будь осторожен с этой командой!")
-        lines.append(f"\n⚠️  ОПАСНО: {note}")
+        note = card.get("danger_note", t("card.danger_default"))
+        lines.append(f"\n⚠️  {t('card.danger')}: {note}")
 
     related = card.get("related", [])
     if related and not compact:
-        lines.append(f"\nСвязанные: {', '.join(related)}")
-        lines.append(f"  cmd related {card['name']}  — открыть связанные")
+        lines.append(f"\n{t('card.related')}: {', '.join(related)}")
+        lines.append(t("card.related_cmd", name=card["name"]))
 
     if tier in ("system", "useful") and not compact:
-        lines.append(f"\n💡 Добавь свою карточку: cmd edit {card['name']}")
+        lines.append(f"\n💡 {t('card.edit_hint', name=card['name']).strip()}")
 
     lines.append("")
     return "\n".join(lines)
@@ -64,18 +53,19 @@ def format_card(card, compact=False):
 
 def format_search_results(results, query):
     if not results:
-        return f"Ничего не найдено по запросу «{query}».\nПопробуй: cmd --all {query}"
-    lines = [f"Найдено: {len(results)} по запросу «{query}»\n"]
+        return t("search.none", query=query)
+    lines = [t("search.header", count=len(results), query=query) + "\n"]
+    icons = tier_icons()
     for i, r in enumerate(results):
-        tier = TIER_ICONS.get(r.get("tier", ""), " ")
+        tier = icons.get(r.get("tier", ""), " ")
         title = r.get("title") or r.get("what") or ""
         lines.append(f"  [{i}] {tier} {r['name']} — {title}")
-    lines.append("\ncmd <имя>  или  cmd --pick")
+    lines.append(t("search.footer"))
     return "\n".join(lines)
 
 
 def format_browser_line(entry):
-    tier = TIER_ICONS.get(entry.get("tier", ""), " ")
+    tier = tier_icons().get(entry.get("tier", ""), " ")
     cat = entry.get("category_title", "")
     sub = entry.get("subcategory_title", "")
     title = entry.get("title", "")
@@ -85,7 +75,8 @@ def format_browser_line(entry):
 
 
 def format_group_header(entry):
-    tier = TIER_LABELS.get(entry.get("tier", ""), entry.get("tier", ""))
+    tiers = tier_labels()
+    tier = tiers.get(entry.get("tier", ""), entry.get("tier", ""))
     cat = entry.get("category_title", "")
     sub = entry.get("subcategory_title", "")
     if sub:

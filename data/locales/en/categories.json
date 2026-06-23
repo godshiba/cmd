@@ -1,0 +1,13 @@
+{
+  "navigation": {"title": "Navigation", "order": 1, "subs": {"basics": {"title": "Movement", "order": 1}, "view": {"title": "Listing", "order": 2}}},
+  "files": {"title": "Files", "order": 2, "subs": {"manage": {"title": "Create & modify", "order": 1}, "view": {"title": "Read & view", "order": 2}}},
+  "search": {"title": "Search", "order": 3, "subs": {"find": {"title": "Find files & text", "order": 1}}},
+  "system": {"title": "System", "order": 4, "subs": {"info": {"title": "Information", "order": 1}, "config": {"title": "Configuration", "order": 2}}},
+  "network": {"title": "Network", "order": 5, "subs": {"remote": {"title": "Connections", "order": 1}}},
+  "packages": {"title": "Packages", "order": 6, "subs": {"install": {"title": "Installation", "order": 1}}},
+  "git": {"title": "Git", "order": 7, "subs": {"basics": {"title": "Basics", "order": 1}}},
+  "processes": {"title": "Processes", "order": 8, "subs": {"manage": {"title": "Management", "order": 1}}},
+  "text": {"title": "Text", "order": 9, "subs": {"process": {"title": "Processing", "order": 1}}},
+  "archive": {"title": "Archives", "order": 10, "subs": {"compress": {"title": "Compression", "order": 1}}},
+  "dev": {"title": "Development", "order": 11, "subs": {"tools": {"title": "Tools", "order": 1}}}
+}

@@ -5,6 +5,7 @@ import sys
 from .clipboard import copy_text
 from .display import format_card
 from .fzf_util import run_fzf
+from .i18n import t
 from .lookup import resolve
 
 
@@ -29,27 +30,26 @@ def pick_example(name, silent=False, action="insert"):
     if not lines:
         if not silent:
             print(format_card(card))
-            print("Нет примеров для этой команды.")
+            print(t("example.none"))
         return None
 
     if len(lines) == 1 and silent:
         return lines[0].split("\t", 1)[1]
 
     if not shutil.which("fzf"):
-        print("Установи fzf: brew install fzf", file=sys.stderr)
+        print(t("example.install_fzf"), file=sys.stderr)
         return lines[0].split("\t", 1)[1]
 
-    header = "Enter — вставить | Ctrl-Y — копировать | Esc — отмена"
     cmd = [
         "fzf",
         "--delimiter=\t",
         "--with-nth=1",
-        f"--header={header}",
+        f"--header={t('example.fzf_header')}",
         "--height=40%",
         "--layout=reverse",
         "--bind=enter:accept",
         "--bind=ctrl-y:execute-silent(echo -n {2} | pbcopy;"
-        " printf '\\nСкопировано: %s\\n' {2} >/dev/tty)+abort",
+        " printf '\\nCopied: %s\\n' {2} >/dev/tty)+abort",
     ]
 
     selected = run_fzf(cmd, lines)
@@ -61,11 +61,11 @@ def pick_example(name, silent=False, action="insert"):
     if action == "run":
         if card.get("danger"):
             try:
-                answer = input(f"⚠️  Запустить: {example_cmd}? [y/N] ").strip().lower()
+                answer = input(t("example.run_confirm", cmd=example_cmd)).strip().lower()
             except (EOFError, KeyboardInterrupt):
                 return None
             if answer != "y":
-                print("Отменено.")
+                print(t("example.cancelled"))
                 return None
         subprocess.run(example_cmd, shell=True)
         return None
