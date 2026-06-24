@@ -29,13 +29,20 @@
 - [Горячие клавиши](#горячие-клавиши)
 - [Команды](#команды)
 - [Структура репозитория](#структура-репозитория)
-- [Changelog и лицензия](#changelog-и-лицензия)
+- [Журнал изменений и лицензия](#журнал-изменений-и-лицензия)
 
 ---
 
 ## Что это
 
-`cmd` — **личный справочник команд** в терминале: карточки, примеры, браузер fzf, Ctrl+O.
+`cmd` — **личный справочник команд** в терминале:
+
+- **Карточки** — что делает команда, когда нужна, когда нет
+- **Примеры** — готовые команды (`ls -la`, `cd ..`, …)
+- **Браузер** — Essential → Recent → Useful, поиск через fzf
+- **Горячие клавиши** — Ctrl+O / F2 из строки zsh
+
+Не заменяет `man`. Помогает **быстрее находить и запоминать** команды.
 
 ## Требования
 
@@ -44,10 +51,15 @@
 | **macOS** | 13+ | Индекс через `apropos` |
 | **Python** | 3.9+ | Только stdlib |
 | **zsh** | 5.8+ | Стандартная оболочка |
-| **fzf** | 0.30+ | `brew install fzf` |
+| **fzf** | 0.30+ | `brew install fzf` — нужен для браузера |
+| **Terminal** | любой | Горячие клавиши работают в строке ввода zsh |
 
 ```bash
-sw_vers && python3 --version && zsh --version && fzf --version && cmd --version
+sw_vers                    # macOS
+python3 --version          # Python 3.9+
+zsh --version              # zsh 5.8+
+fzf --version              # fzf 0.30+
+cmd --version              # cmd 0.1.0
 ```
 
 ## Установка
@@ -55,7 +67,9 @@ sw_vers && python3 --version && zsh --version && fzf --version && cmd --version
 ```bash
 brew install fzf
 git clone https://github.com/godshiba/cmd.git ~/scripts/cmd
-cd ~/scripts/cmd && ./cmd index
+cd ~/scripts/cmd
+bash install.sh
+./cmd index
 ```
 
 `~/.zshrc`:
@@ -66,12 +80,22 @@ export PATH="$HOME/scripts/cmd:$PATH"
 source "$HOME/scripts/cmd/shell/cmd.widget.zsh"
 ```
 
+```bash
+source ~/.zshrc
+cmd ls
+cmd lang ru    # язык интерфейса
+```
+
 ## Язык приложения
 
 ```bash
 cmd lang        # меню выбора (fzf)
 cmd lang ru     # сразу русский
+cmd lang en     # English
+cmd lang zh     # 中文
 ```
+
+Или `export CMD_LANG=ru` — сохраняется в `~/.cmd/config.json`.
 
 В браузере в шапке: `Язык: cmd lang`
 
@@ -82,28 +106,52 @@ cmd lang ru     # сразу русский
 | **Ctrl+O** | Браузер |
 | **F2** | Браузер (запасной) |
 
+`cmd-keys` — список привязок
+
 ## Команды
 
 | Команда | Описание |
 |---------|----------|
-| `cmd` | Браузер |
-| `cmd ls` | Карточка |
-| `cmd копир` | Поиск |
-| `cmd index` | Индекс macOS |
-| `cmd lang` | Язык UI |
+| `cmd` | Браузер fzf |
+| `cmd ls` | Карточка команды |
+| `cmd <запрос>` | Поиск по ключевому слову (напр. `cmd grep`) |
+| `cmd related ls` | Связанные команды |
+| `cmd --pick` | Выбор команды (виджет zsh) |
+| `cmd --pick-example ls` | Выбор примера |
+| `cmd --copy ls` | Скопировать первый пример |
+| `cmd --all` | Все системные команды |
+| `cmd index` | Пересобрать индекс macOS |
+| `cmd edit имя` | Личная карточка |
+| `cmd lang` | Меню языка (fzf) |
+| `cmd lang en\|ru\|zh` | Язык напрямую |
 | `cmd --version` | Версия |
+
+**В браузере:** Enter — карточка · Ctrl+E — пример · Esc — закрыть
+
+Полная документация на английском: [README.md](README.md)
 
 ## Структура репозитория
 
 ```
-cmd/                     → github.com/godshiba/cmd
-├── README.md / .ru.md / .zh-CN.md
-├── VERSION, CHANGELOG.md, LICENSE
-├── cmd, main.py, data/, lib/, shell/
-└── ~/.cmd/              → данные пользователя
+cmd/                              # https://github.com/godshiba/cmd
+├── README.md / README.ru.md / README.zh-CN.md
+├── VERSION                       # 0.1.0
+├── install.sh                    # PATH и права
+├── scripts/verify.sh             # локальные тесты
+├── scripts/migrate_legacy.py     # перенос data/*.json → data/legacy/
+├── scripts/capture_evidence.py   # артефакты проверки (CMD_SCRATCH)
+├── tests/                        # smoke + evidence тесты
+├── CHANGELOG.md, LICENSE
+├── cmd, main.py
+├── data/
+│   ├── locales/{en,ru,zh}/       # основные данные
+│   ├── legacy/                   # categories + useful fallback (см. LEGACY.md)
+│   └── LEGACY.md
+├── lib/, shell/cmd.widget.zsh
+└── ~/.cmd/                       # config, index, custom, history
 ```
 
-## Changelog и лицензия
+## Журнал изменений и лицензия
 
 - [CHANGELOG.md](CHANGELOG.md)
 - [Релизы](https://github.com/godshiba/cmd/releases)

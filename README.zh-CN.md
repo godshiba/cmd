@@ -35,7 +35,14 @@
 
 ## 简介
 
-`cmd` 是终端中的**个人命令参考**：卡片、示例、fzf 浏览器、Ctrl+O 快捷键。
+`cmd` 是终端中的**个人命令参考**：
+
+- **卡片** — 命令作用、何时使用、何时不用
+- **示例** — 可直接复制的命令（`ls -la`、`cd ..` 等）
+- **浏览器** — Essential → Recent → Useful，fzf 搜索
+- **快捷键** — 在 zsh 提示符按 Ctrl+O / F2
+
+不能替代 `man`，但能让你**更快找到并记住**命令。
 
 ## 系统要求
 
@@ -44,10 +51,15 @@
 | **macOS** | 13+ | 通过 `apropos` 建索引 |
 | **Python** | 3.9+ | 仅标准库 |
 | **zsh** | 5.8+ | 默认 shell |
-| **fzf** | 0.30+ | `brew install fzf` |
+| **fzf** | 0.30+ | `brew install fzf` — 浏览器必需 |
+| **Terminal** | 任意 | 快捷键仅在 zsh 输入行生效 |
 
 ```bash
-sw_vers && python3 --version && zsh --version && fzf --version && cmd --version
+sw_vers                    # macOS
+python3 --version          # Python 3.9+
+zsh --version              # zsh 5.8+
+fzf --version              # fzf 0.30+
+cmd --version              # cmd 0.1.0
 ```
 
 ## 安装
@@ -55,7 +67,9 @@ sw_vers && python3 --version && zsh --version && fzf --version && cmd --version
 ```bash
 brew install fzf
 git clone https://github.com/godshiba/cmd.git ~/scripts/cmd
-cd ~/scripts/cmd && ./cmd index
+cd ~/scripts/cmd
+bash install.sh
+./cmd index
 ```
 
 `~/.zshrc`：
@@ -66,12 +80,22 @@ export PATH="$HOME/scripts/cmd:$PATH"
 source "$HOME/scripts/cmd/shell/cmd.widget.zsh"
 ```
 
+```bash
+source ~/.zshrc
+cmd ls
+cmd lang zh    # 界面语言
+```
+
 ## 应用语言
 
 ```bash
 cmd lang        # 语言菜单 (fzf)
 cmd lang zh     # 直接设为中文
+cmd lang en     # English
+cmd lang ru     # Русский
 ```
+
+或 `export CMD_LANG=zh` — 保存在 `~/.cmd/config.json`。
 
 浏览器顶部提示：`语言: cmd lang`
 
@@ -82,24 +106,49 @@ cmd lang zh     # 直接设为中文
 | **Ctrl+O** | 浏览器 |
 | **F2** | 备用 |
 
+`cmd-keys` — 查看快捷键绑定
+
 ## 命令
 
 | 命令 | 说明 |
 |------|------|
-| `cmd` | 浏览器 |
+| `cmd` | fzf 浏览器 |
 | `cmd ls` | 命令卡片 |
-| `cmd index` | 重建索引 |
-| `cmd lang` | 界面语言 |
-| `cmd --version` | 版本号 |
+| `cmd <关键词>` | 关键词搜索（如 `cmd grep`） |
+| `cmd related ls` | 相关命令 |
+| `cmd --pick` | 选择命令（shell 组件） |
+| `cmd --pick-example ls` | 选择示例 |
+| `cmd --copy ls` | 复制第一个示例 |
+| `cmd --all` | 包含所有系统命令 |
+| `cmd index` | 重建 macOS 索引 |
+| `cmd edit 名称` | 个人卡片 |
+| `cmd lang` | 语言菜单 (fzf) |
+| `cmd lang en\|ru\|zh` | 直接设置语言 |
+| `cmd --version` | 显示版本 |
+
+**浏览器：** Enter = 卡片 · Ctrl+E = 示例 · Esc = 关闭
+
+完整英文文档：[README.md](README.md)
 
 ## 仓库结构
 
 ```
-cmd/                     → github.com/godshiba/cmd
-├── README.md / .ru.md / .zh-CN.md
-├── VERSION, CHANGELOG.md, LICENSE
-├── cmd, main.py, data/, lib/, shell/
-└── ~/.cmd/              → 用户数据
+cmd/                              # https://github.com/godshiba/cmd
+├── README.md / README.ru.md / README.zh-CN.md
+├── VERSION                       # 0.1.0
+├── install.sh                    # PATH 与权限
+├── scripts/verify.sh             # 本地测试
+├── scripts/migrate_legacy.py     # 迁移 data/*.json → data/legacy/
+├── scripts/capture_evidence.py   # 验证产物 (CMD_SCRATCH)
+├── tests/                        # smoke + evidence 测试
+├── CHANGELOG.md, LICENSE
+├── cmd, main.py
+├── data/
+│   ├── locales/{en,ru,zh}/       # 主数据
+│   ├── legacy/                   # categories + useful fallback（见 LEGACY.md）
+│   └── LEGACY.md
+├── lib/, shell/cmd.widget.zsh
+└── ~/.cmd/                       # 用户数据
 ```
 
 ## 更新日志与许可证

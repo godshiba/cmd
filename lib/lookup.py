@@ -4,7 +4,7 @@ import re
 import subprocess
 
 from .i18n import get_locale, t
-from .paths import CUSTOM_PATH, DATA_DIR, INDEX_PATH, locale_data_path
+from .paths import CUSTOM_PATH, INDEX_PATH, LEGACY_DATA_DIR, locale_data_path
 from .index import load_index
 
 TIER_ORDER = {"essential": 0, "recent": 1, "useful": 2, "system": 3}
@@ -22,8 +22,11 @@ def _load_json(path, default=None):
         default = {}
     if not os.path.exists(path):
         return default
-    with open(path, encoding="utf-8") as f:
-        return json.load(f)
+    try:
+        with open(path, encoding="utf-8") as f:
+            return json.load(f)
+    except json.JSONDecodeError:
+        return default
 
 
 def load_categories():
@@ -47,7 +50,7 @@ def load_useful_system():
     path = locale_data_path("useful_system.json", locale)
     items = _load_json(path, default=[])
     if not items:
-        items = _load_json(os.path.join(DATA_DIR, "useful_system.json"), default=[])
+        items = _load_json(os.path.join(LEGACY_DATA_DIR, "useful_system.json"), default=[])
 
     _useful_cache["locale"] = locale
     _useful_cache["items"] = items

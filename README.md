@@ -72,6 +72,7 @@ cmd --version              # cmd 0.1.0
 brew install fzf
 git clone https://github.com/godshiba/cmd.git ~/scripts/cmd
 cd ~/scripts/cmd
+bash install.sh
 ./cmd index
 ```
 
@@ -126,8 +127,10 @@ On the **zsh input line** only:
 |---------|-------------|
 | `cmd` | fzf browser |
 | `cmd ls` | Command card |
-| `cmd copy` | Search by keyword |
+| `cmd <query>` | Search by keyword (e.g. `cmd grep`) |
 | `cmd related ls` | Related commands |
+| `cmd --pick` | Pick command (shell widget) |
+| `cmd --pick-example ls` | Pick an example |
 | `cmd --copy ls` | Copy first example |
 | `cmd --all` | Include all system commands |
 | `cmd index` | Rebuild macOS index |
@@ -149,7 +152,12 @@ cmd/                              # https://github.com/godshiba/cmd
 ├── README.md                     # English (default)
 ├── README.ru.md                  # Russian
 ├── README.zh-CN.md               # Chinese
-├── VERSION                       # 1.0.0
+├── VERSION                       # 0.1.0
+├── install.sh                    # PATH + permissions setup
+├── scripts/verify.sh             # local test gate
+├── scripts/migrate_legacy.py     # move stray data/*.json → data/legacy/
+├── scripts/capture_evidence.py   # verification artifacts (CMD_SCRATCH)
+├── tests/                        # smoke + evidence tests
 ├── cmd                           # CLI entry (bash → python)
 ├── main.py                       # argument routing
 ├── data/
@@ -157,9 +165,8 @@ cmd/                              # https://github.com/godshiba/cmd
 │   │   ├── en/                   # UI + cards (English)
 │   │   ├── ru/                   # UI + cards (Russian)
 │   │   └── zh/                   # UI + cards (Chinese)
-│   ├── essential.json            # legacy fallback
-│   ├── categories.json
-│   └── useful_system.json
+│   ├── legacy/                   # categories + useful fallback (see LEGACY.md)
+│   └── LEGACY.md
 ├── lib/
 │   ├── i18n.py                   # language system
 │   ├── browser.py                # fzf browser

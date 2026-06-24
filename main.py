@@ -8,7 +8,7 @@ from lib.browser import browse, browse_related, preview
 from lib.display import format_card, format_search_results
 from lib.examples import copy_first_example, pick_example
 from lib.history import record, recent
-from lib.i18n import get_locale, language_choices, set_locale, t
+from lib.i18n import get_locale, language_choices, load_ui, set_locale, t
 from lib.lang_menu import pick_language
 from lib.index import build_index, load_index
 from lib.lookup import resolve, search
@@ -17,23 +17,28 @@ from lib.version import get_version
 
 
 def build_help():
+    usage = load_ui().get("help.usage_lines", [])
+    if not usage:
+        usage = [
+            "  cmd                    fzf browser",
+            "  cmd ls                 command card",
+            "  cmd <query>            keyword search",
+            "  cmd related ls         related commands",
+            "  cmd --pick             pick command (shell widget)",
+            "  cmd --pick-example ls  pick example (Enter/Ctrl-Y)",
+            "  cmd --copy ls          copy first example",
+            "  cmd --all              include all system commands",
+            "  cmd index              rebuild macOS index",
+            "  cmd edit docker        personal card",
+            "  cmd lang               language menu (fzf)",
+            "  cmd lang en|ru|zh      set language directly",
+            "  cmd --version          show version",
+        ]
     lines = [
         t("help.title"),
         "",
         t("help.usage_header"),
-        "  cmd                    fzf browser",
-        "  cmd ls                 command card",
-        "  cmd copy               semantic search",
-        "  cmd related ls         related commands",
-        "  cmd --pick             pick command (shell widget)",
-        "  cmd --pick-example ls  pick example (Enter/Ctrl-Y)",
-        "  cmd --copy ls          copy first example",
-        "  cmd --all              include all system commands",
-        "  cmd index              rebuild macOS index",
-        "  cmd edit docker        personal card",
-        "  cmd lang               language menu (fzf)",
-        "  cmd lang en|ru|zh      set language directly",
-        "  cmd --version          show version",
+        *usage,
         "",
         t("help.hotkeys"),
         t("help.widget"),
@@ -151,6 +156,18 @@ def main():
     if "--version" in argv or "-v" in argv:
         print(f"cmd {get_version()}")
         return 0
+
+    if "--verify-capture" in argv:
+        import importlib.util
+
+        os.environ.setdefault("CMD_GIT_PURE", "1")
+        spec = importlib.util.spec_from_file_location(
+            "capture_evidence",
+            os.path.join(os.path.dirname(__file__), "scripts", "capture_evidence.py"),
+        )
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+        return mod.capture_artifacts()
 
     if "--pick" in argv:
         name = browse(recent(), show_all=False, silent=True)

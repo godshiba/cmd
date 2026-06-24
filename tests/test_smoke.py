@@ -6,13 +6,14 @@ import tempfile
 import unittest
 from pathlib import Path
 
+ROOT = Path(__file__).resolve().parent.parent
 _TEST_HOME = tempfile.mkdtemp(prefix="cmd-test-")
 os.environ["CMD_HOME"] = _TEST_HOME
-
-ROOT = Path(__file__).resolve().parent.parent
+if not os.environ.get("CMD_SCRATCH"):
+    os.environ["CMD_SCRATCH"] = str(ROOT / ".verify-scratch")
 sys.path.insert(0, str(ROOT))
 
-_TEST_ENV = {**os.environ, "CMD_HOME": _TEST_HOME}
+_TEST_ENV = {**os.environ, "CMD_HOME": _TEST_HOME, "CMD_USE_INPROCESS": "1"}
 
 from lib.display import format_card, format_browser_line  # noqa: E402
 from lib.i18n import get_locale, set_locale, t, load_ui  # noqa: E402
@@ -77,6 +78,10 @@ class TestLocaleData(unittest.TestCase):
             keys[loc] = set(data.keys())
         self.assertEqual(keys["en"], keys["ru"])
         self.assertEqual(keys["en"], keys["zh"])
+        for loc in LOCALES:
+            data = json.loads((LOCALE_DIR / loc / "ui.json").read_text(encoding="utf-8"))
+            self.assertIsInstance(data.get("help.usage_lines"), list)
+            self.assertGreaterEqual(len(data["help.usage_lines"]), 10)
 
 
 class TestI18n(unittest.TestCase):
@@ -145,48 +150,127 @@ class TestDisplay(unittest.TestCase):
         self.assertIn("ls", line)
 
 
+class TestDocsConsistency(unittest.TestCase):
+    def test_readme_version_matches_file(self):
+        version = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
+        readme = (ROOT / "README.md").read_text(encoding="utf-8")
+        self.assertIn(f"# {version}", readme)
+        self.assertNotIn("# 1.0.0", readme)
+
+    def test_changelog_has_no_v1_release(self):
+        changelog = (ROOT / "CHANGELOG.md").read_text(encoding="utf-8")
+        self.assertIn("[0.0.1]", changelog)
+        self.assertNotIn("[1.0.0]", changelog)
+        self.assertNotIn("releases/tag/v1.0.0", changelog)
+
+    def test_help_no_cmd_copy_subcommand(self):
+        import main
+
+        set_locale("en")
+        help_text = main.build_help()
+        self.assertIn("cmd <query>", help_text)
+        self.assertNotIn("cmd copy", help_text)
+        self.assertIn("cmd --copy", help_text)
+
+    def test_help_localized_ru(self):
+        import main
+
+        set_locale("ru")
+        help_text = main.build_help()
+        self.assertIn("навигатор по командам", help_text)
+        self.assertIn("браузер fzf", help_text)
+        self.assertIn("карточка команды", help_text)
+
+    def test_help_localized_zh(self):
+        import main
+
+        set_locale("zh")
+        help_text = main.build_help()
+        self.assertIn("终端命令导航器", help_text)
+        self.assertIn("fzf 浏览器", help_text)
+
+    def test_legacy_data_doc_exists(self):
+        self.assertTrue((ROOT / "data" / "LEGACY.md").exists())
+
+    def test_legacy_doc_matches_migration_script(self):
+        text = (ROOT / "data" / "LEGACY.md").read_text(encoding="utf-8")
+        self.assertIn("migrate_legacy.py", text)
+        self.assertNotIn("On first import", text)
+
+    def test_paths_legacy_constants(self):
+        from lib.paths import CATEGORIES_PATH, ESSENTIAL_PATH, USEFUL_PATH
+
+        self.assertTrue(Path(ESSENTIAL_PATH).exists())
+        self.assertTrue(Path(CATEGORIES_PATH).exists())
+        self.assertTrue(Path(USEFUL_PATH).exists())
+        self.assertIn("/legacy/", CATEGORIES_PATH)
+        self.assertIn("/legacy/", USEFUL_PATH)
+        self.assertIn("/locales/ru/", ESSENTIAL_PATH)
+
+
+def _run_cmd(argv, env=None):
+    run_env = env or _TEST_ENV
+    if run_env.get("CMD_USE_INPROCESS"):
+        import io
+        from contextlib import redirect_stderr, redirect_stdout
+
+        saved_argv = sys.argv[:]
+        saved_env = os.environ.copy()
+        os.environ.update(run_env)
+        sys.argv = ["main.py", *argv]
+        out, err = io.StringIO(), io.StringIO()
+        try:
+            if str(ROOT) not in sys.path:
+                sys.path.insert(0, str(ROOT))
+            if "main" in sys.modules:
+                del sys.modules["main"]
+            import main as main_mod
+
+            with redirect_stdout(out), redirect_stderr(err):
+                rc = main_mod.main()
+            return subprocess.CompletedProcess(
+                [str(ROOT / "cmd"), *argv], rc or 0, out.getvalue(), err.getvalue()
+            )
+        finally:
+            sys.argv = saved_argv
+            os.environ.clear()
+            os.environ.update(saved_env)
+    return subprocess.run(
+        [str(ROOT / "cmd"), *argv],
+        capture_output=True,
+        text=True,
+        cwd=ROOT,
+        env=run_env,
+    )
+
+
 class TestCLI(unittest.TestCase):
     def test_cmd_version(self):
-        result = subprocess.run(
-            [str(ROOT / "cmd"), "--version"],
-            capture_output=True,
-            text=True,
-            cwd=ROOT,
-            env=_TEST_ENV,
-        )
+        result = _run_cmd(["--version"])
         self.assertEqual(result.returncode, 0)
         self.assertIn(f"cmd {get_version()}", result.stdout)
 
     def test_cmd_help(self):
-        result = subprocess.run(
-            [str(ROOT / "cmd"), "--help"],
-            capture_output=True,
-            text=True,
-            cwd=ROOT,
-            env={**_TEST_ENV, "CMD_LANG": "en"},
-        )
+        result = _run_cmd(["--help"], env={**_TEST_ENV, "CMD_LANG": "en"})
         self.assertEqual(result.returncode, 0)
         self.assertIn("terminal command navigator", result.stdout)
+        self.assertIn("cmd <query>", result.stdout)
+        self.assertNotIn("cmd copy", result.stdout)
 
     def test_cmd_ls_essential(self):
-        result = subprocess.run(
-            [str(ROOT / "cmd"), "ls"],
-            capture_output=True,
-            text=True,
-            cwd=ROOT,
-            env={**_TEST_ENV, "CMD_LANG": "en"},
-        )
+        result = _run_cmd(["ls"], env={**_TEST_ENV, "CMD_LANG": "en"})
         self.assertEqual(result.returncode, 0)
         self.assertIn("ls", result.stdout)
 
+    def test_cmd_help_ru_localized(self):
+        result = _run_cmd(["--help"], env={**_TEST_ENV, "CMD_LANG": "ru"})
+        self.assertEqual(result.returncode, 0)
+        self.assertIn("браузер fzf", result.stdout)
+        self.assertIn("навигатор по командам", result.stdout)
+        self.assertNotIn("cmd copy", result.stdout)
+
     def test_cmd_lang_direct(self):
-        result = subprocess.run(
-            [str(ROOT / "cmd"), "lang", "en"],
-            capture_output=True,
-            text=True,
-            cwd=ROOT,
-            env=_TEST_ENV,
-        )
+        result = _run_cmd(["lang", "en"])
         self.assertEqual(result.returncode, 0)
         self.assertIn("English", result.stdout)
 

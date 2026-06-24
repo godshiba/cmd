@@ -6,9 +6,17 @@ All notable changes to **cmd** are documented here.
 
 ### Added
 - Smoke test suite: `tests/test_smoke.py` (locale parity, lookup, CLI)
+- Local verify gate: `scripts/verify.sh`
+- Evidence gate: `scripts/capture_evidence.py`, `tests/test_evidence.py`
+- Localized `cmd --help` usage lines (`help.usage_lines` in en/ru/zh `ui.json`)
+- `data/legacy/` isolated fallbacks + `data/LEGACY.md`; `scripts/migrate_legacy.py`
+- Release notes: `.github/release-notes/v0.0.3.md`, `v0.1.0.md`
 - Production audit runbook: `.claude/plans/production-audit-runbook.md`
 
 ### Fixed
+- Docs: command table uses `cmd <query>` (not bogus `cmd copy` subcommand); README VERSION = 0.1.0; CHANGELOG 1.0.0 → 0.0.1
+- `lib/lookup.py` useful-system fallback path → `data/legacy/`
+- `lib/paths.py`: no import-time migration; `ESSENTIAL_PATH` → `locales/ru/essential.json`
 - fzf browser from zsh widget (Ctrl+O / F2): items now reach fzf via stdin pipe
 - `cmd ls` and essential lookup work without `cmd index`
 - Search matches example text (e.g. `cmd docker` finds `brew`)
@@ -33,19 +41,17 @@ All notable changes to **cmd** are documented here.
 - Locale files for Useful commands: `data/locales/*/useful_system.json`
 - Language hint in browser header
 
-## [1.0.0] — 2026-06-23
+## [0.0.1] — 2026-06-23
 
 ### Added
-- CLI `cmd` — terminal command navigator for macOS
+- Initial release: terminal command navigator for macOS (project formerly `findcmd`)
 - fzf browser with Essential / Recent / Useful / System tiers
 - 32 curated Essential cards with examples
-- i18n: English, Russian, Chinese (`cmd lang`)
 - zsh hotkeys: Ctrl+O, F2
 - `cmd index` — macOS command index via apropos
 - Personal cards via `cmd edit`
-- Multilingual README: [EN](README.md) · [RU](README.ru.md) · [ZH](README.zh-CN.md)
 
 [0.1.0]: https://github.com/godshiba/cmd/releases/tag/v0.1.0
 [0.0.3]: https://github.com/godshiba/cmd/releases/tag/v0.0.3
 [0.0.2]: https://github.com/godshiba/cmd/releases/tag/v0.0.2
-[1.0.0]: https://github.com/godshiba/cmd/releases/tag/v1.0.0
+[0.0.1]: https://github.com/godshiba/cmd/releases/tag/v0.0.1
