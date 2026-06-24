@@ -60,9 +60,18 @@ def _is_ignored(rel: Path, patterns: list[str]) -> bool:
     return False
 
 
+def _progress(msg: str) -> None:
+    import sys
+
+    if not os.environ.get("CMD_GIT_PURE_QUIET"):
+        print(msg, flush=True)
+
+
 def _build_tree(repo: Path, root: Path, patterns: list[str], rel: Path = Path(".")) -> str:
     entries: list[tuple[str, str, str]] = []
     full = root / rel if str(rel) != "." else root
+    if str(rel) == ".":
+        _progress("git_pure: hashing worktree (may take a minute)...")
     for child in sorted(full.iterdir(), key=lambda p: p.name.lower()):
         if child.name == ".git":
             continue

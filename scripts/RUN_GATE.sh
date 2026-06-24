@@ -5,10 +5,11 @@ ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
 export CMD_SCRATCH="${CMD_SCRATCH:-$ROOT/.verify-scratch}"
 export CMD_HOME="${CMD_HOME:-$CMD_SCRATCH/cmd-test-home}"
-export CMD_GIT_PURE="${CMD_GIT_PURE:-1}"
 mkdir -p "$CMD_SCRATCH" "$CMD_HOME"
-python3 scripts/migrate_legacy.py
-python3 scripts/capture_evidence.py
+echo "== migrate_legacy =="
+python3 -u scripts/migrate_legacy.py
+echo "== capture_evidence =="
+python3 -u scripts/capture_evidence.py
 rc=$?
 echo "EXIT=$rc"
 cat "$CMD_SCRATCH/summary.txt"

@@ -126,7 +126,14 @@ class TestLookup(unittest.TestCase):
     def test_browser_entries_without_index(self):
         set_locale("en")
         entries = browser_entries([], show_all=False)
-        self.assertGreaterEqual(len(entries), ESSENTIAL_COUNT + USEFUL_COUNT)
+        essential_names = {c["name"].lower() for c in load_essential()}
+        useful_only = sum(
+            1
+            for u in load_useful_system()
+            if u["name"].lower() not in essential_names
+        )
+        expected = ESSENTIAL_COUNT + useful_only
+        self.assertEqual(len(entries), expected)
         tiers = {e["tier"] for e in entries}
         self.assertIn("essential", tiers)
         self.assertIn("useful", tiers)

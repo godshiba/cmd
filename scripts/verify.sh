@@ -9,7 +9,12 @@ export CMD_LANG="${CMD_LANG:-en}"
 export CMD_SCRATCH="${CMD_SCRATCH:-$ROOT/.verify-scratch}"
 mkdir -p "$CMD_SCRATCH"
 
-export CMD_GIT_PURE="${CMD_GIT_PURE:-1}"
-python3 scripts/migrate_legacy.py
-python3 scripts/capture_evidence.py
-echo "verify.sh: OK — evidence in $CMD_SCRATCH"
+echo "== migrate_legacy =="
+python3 -u scripts/migrate_legacy.py
+echo "== capture_evidence =="
+python3 -u scripts/capture_evidence.py
+rc=$?
+echo "EXIT=$rc"
+cat "$CMD_SCRATCH/summary.txt"
+echo "verify.sh: evidence in $CMD_SCRATCH"
+exit $rc

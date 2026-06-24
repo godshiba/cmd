@@ -171,9 +171,9 @@ def release_gate() -> int:
     was_dirty = bool(status_out.strip()) if not git_failed else _worktree_dirty()
     head_before, tag_before = _read_git_refs()
 
-    use_pure = git_failed or os.environ.get("CMD_GIT_PURE")
-    if was_dirty or use_pure:
-        if not git_failed and not use_pure:
+    use_pure = git_failed
+    if was_dirty:
+        if not git_failed:
             rc, add_out = _git_run(["git", "add", "-A"])
             tag_log.append(f"$ git add -A\nexit={rc}\n{add_out}")
             if rc != 0:
@@ -182,7 +182,8 @@ def release_gate() -> int:
             rc, commit_out = _git_run(["git", "commit", "-m", _COMMIT_MSG])
             tag_log.append(f"$ git commit -m {_COMMIT_MSG!r}\nexit={rc}\n{commit_out}")
             if rc != 0:
-                git_failed = True
+                (SCRATCH / "tag.log").write_text("\n".join(tag_log))
+                return 1
             else:
                 rc, status_out = _git_run(["git", "status", "--porcelain"])
                 tag_log.append(
@@ -193,9 +194,10 @@ def release_gate() -> int:
                     return 1
                 was_dirty = False
 
-        if use_pure:
+        elif git_failed:
             import importlib.util
 
+            tag_log.append("$ git subprocess unavailable — using git_pure\n")
             spec = importlib.util.spec_from_file_location(
                 "git_pure", ROOT / "scripts" / "git_pure.py"
             )
@@ -205,7 +207,7 @@ def release_gate() -> int:
             tag_log.extend(pure_log)
             was_dirty = False
 
-    if not git_failed and not os.environ.get("CMD_GIT_PURE"):
+    if not git_failed:
         _git_run(["git", "tag", "-f", "v0.1.0"])
         for cmd in (["git", "tag", "--points-at", "HEAD"], ["git", "show", "v0.1.0", "--stat"]):
             rc, out = _git_run(cmd)
@@ -222,10 +224,17 @@ def release_gate() -> int:
     return 0 if head and tag and head == tag else 1
 
 
+def _progress(msg: str) -> None:
+    if os.environ.get("CMD_CAPTURE_QUIET"):
+        return
+    print(msg, flush=True)
+
+
 def capture_artifacts() -> int:
     failures: list[str] = []
 
     # Phase A: compile + CLI (all in-process for ./cmd)
+    _progress("capture: compile + CLI...")
     compile_rc, _ = _run_compile()
     if compile_rc != 0:
         failures.append("py_compile")
@@ -247,11 +256,13 @@ def capture_artifacts() -> int:
             failures.append(log_name)
 
     # Phase B+C: unittest in-process, then tests.log
+    _progress("capture: unittest...")
     test_rc, _ = _run_unittest()
     if test_rc != 0:
         failures.append("unittest")
 
     # Phase D: prepost git evidence
+    _progress("capture: prepost git evidence...")
     prepost_lines = []
     for cmd in (
         ["git", "status", "--porcelain"],
@@ -272,6 +283,7 @@ def capture_artifacts() -> int:
     (SCRATCH / "prepost.log").write_text("\n".join(prepost_lines))
 
     # Phase E: release gate → tag.log (skip with CMD_VERIFY_NO_GIT=1 for read-only runs)
+    _progress("capture: release gate...")
     if os.environ.get("CMD_VERIFY_NO_GIT"):
         (SCRATCH / "tag.log").write_text(
             "$ release_gate skipped (CMD_VERIFY_NO_GIT=1)\nexit=0\n"
@@ -292,6 +304,7 @@ def capture_artifacts() -> int:
 
 
 def main() -> int:
+    _progress("capture: starting...")
     return capture_artifacts()
 
 
